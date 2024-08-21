@@ -1,0 +1,81 @@
+import React, { useState } from "react";
+import {
+  createBrowserRouter,
+  Route,
+  createRoutesFromElements,
+  RouterProvider,
+} from "react-router-dom";
+import RootLayout from "../Layout/RootLayout";
+
+import Dashboard from "../pages/Dashboard";
+import NotFound from "../Layout/NotFound";
+import Login from "../pages/Login";
+import AllStaff from "../pages/admin/Staff/AllStaff";
+import CreateStaff from "../pages/admin/Staff/CreateStaff";
+import Menu from "../pages/admin/MenuItem/Menu";
+import CreateMenu from "../pages/admin/MenuItem/CreateMenu";
+import AllCategory from "../pages/admin/Category/AllCategory";
+import CreateCategory from "../pages/admin/Category/CreateCategory";
+
+
+
+const Root = () => {
+  const [userRole, setUserRole] = useState(
+    localStorage.getItem("userRole") || ""
+  );
+
+  const handleLogin = (role) => {
+    setUserRole(role);
+    localStorage.setItem("userRole", role);
+  };
+
+  const generateRoutes = () => {
+    const isLoggedIn = userRole !== "";
+    return createRoutesFromElements(
+      <>
+        {isLoggedIn && (
+          <Route
+            path="/"
+            element={
+              <RootLayout userRole={userRole} setUserRole={setUserRole} />
+            }
+          >
+            <Route
+              path="/dashboard"
+              element={
+                userRole === "admin" ? (
+                  <Dashboard userRole={userRole} />
+                ) : (
+                  <>
+                    {/* <PatientDashboard userRole={userRole} /> */}
+                  </>
+                )
+              }
+            ></Route>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="allstaff" element={<AllStaff />} />
+            <Route path="create-staff" element={<CreateStaff />} />
+            <Route path="create-category" element={ <CreateCategory/>} />
+            <Route path="menu-item" element={<Menu />} />
+            <Route path="create-menu" element={<CreateMenu />} />
+            <Route path="all-category" element={<AllCategory />} />
+         
+          </Route>
+        )}
+        <Route
+          index
+          element={
+            <Login onLogin={(newUserRole) => handleLogin(newUserRole)} />
+          }
+        />
+        <Route path="*" element={<NotFound />} />
+      </>
+    );
+  };
+
+  const router = createBrowserRouter(generateRoutes());
+
+  return <RouterProvider router={router} />;
+};
+
+export default Root;

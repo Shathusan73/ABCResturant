@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.custom-select {
+    color: black !important;
+    background-color: white;
+    border: 1px solid #ccc;
+  }
+  
+  .custom-select option {
+    color: black; /* Style the option text if needed */
+  }
