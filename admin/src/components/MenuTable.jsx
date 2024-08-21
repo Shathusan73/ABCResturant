@@ -4,24 +4,26 @@ import { toast } from 'react-hot-toast';
 
 const MenuTable = () => {
   const [menus, setMenus] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [editingMenu, setEditingMenu] = useState(null);
-  const [deletingMenu, setDeletingMenu] = useState(null);
   const [editForm, setEditForm] = useState({
     name: '',
     price: '',
     description: '',
-    ingredients: '',
-    category: ''
+    ingredients: [],
+    categoryId: ''
   });
+  const [newIngredient, setNewIngredient] = useState('');
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     fetchMenus();
+    fetchCategories();
   }, []);
 
   const fetchMenus = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/menus');
-      console.log('Fetched Menus:', response.data); // Debug: Check fetched data
       setMenus(response.data);
     } catch (error) {
       toast.error('Failed to fetch menu items');
@@ -29,15 +31,13 @@ const MenuTable = () => {
     }
   };
 
-  const handleDelete = async () => {
+  const fetchCategories = async () => {
     try {
-      await axios.delete(`http://localhost:8080/api/menus/${deletingMenu.id}`);
-      toast.success('Menu item deleted successfully!');
-      setDeletingMenu(null);
-      fetchMenus();
+      const response = await axios.get('http://localhost:8080/api/categories');
+      setCategories(response.data);
     } catch (error) {
-      toast.error('Failed to delete menu item');
-      console.error('Delete error:', error);
+      toast.error('Failed to fetch categories');
+      console.error('Fetch categories error:', error);
     }
   };
 
@@ -47,8 +47,8 @@ const MenuTable = () => {
       name: menu.name,
       price: menu.price,
       description: menu.description,
-      ingredients: menu.ingredients.join(', '),
-      category: menu.category ? menu.category.name : '' // Handle potential undefined category
+      ingredients: menu.ingredients,
+      categoryId: menu.category ? menu.category.id : ''
     });
   };
 
@@ -57,25 +57,63 @@ const MenuTable = () => {
     setEditForm({ ...editForm, [name]: value });
   };
 
-  const handleSaveEdit = async () => {
-    console.log('Edit Form Data:', editForm); // Debug: Check form data
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
 
-    const updatedMenu = {
-      name: editForm.name,
-      price: parseFloat(editForm.price),
-      description: editForm.description,
-      ingredients: editForm.ingredients.split(',').map(ing => ing.trim()),
-      category: { name: editForm.category }
-    };
+  const handleSaveEdit = async () => {
+    if (!editingMenu) return;
+
+    const formData = new FormData();
+    formData.append('name', editForm.name);
+    formData.append('price', parseFloat(editForm.price));
+    formData.append('description', editForm.description);
+    formData.append('ingredients', JSON.stringify(editForm.ingredients));
+    formData.append('categoryId', editForm.categoryId);
+    if (image) formData.append('image', image);
 
     try {
-      await axios.put(`http://localhost:8080/api/menus/${editingMenu.id}`, updatedMenu);
+      await axios.put(`http://localhost:8080/api/menus/${editingMenu.id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       toast.success('Menu item updated successfully!');
       setEditingMenu(null);
       fetchMenus();
     } catch (error) {
       toast.error('Failed to update menu item');
       console.error('Update error:', error);
+    }
+  };
+
+  const handleAddIngredient = () => {
+    if (newIngredient) {
+      setEditForm((prevForm) => ({
+        ...prevForm,
+        ingredients: [...prevForm.ingredients, newIngredient]
+      }));
+      setNewIngredient('');
+    }
+  };
+
+  const handleRemoveIngredient = (index) => {
+    setEditForm((prevForm) => ({
+      ...prevForm,
+      ingredients: prevForm.ingredients.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this menu item?')) {
+      try {
+        await axios.delete(`http://localhost:8080/api/menus/${id}`);
+        toast.success('Menu item deleted successfully!');
+        fetchMenus();
+      } catch (error) {
+        toast.error('Failed to delete menu item');
+        console.error('Delete error:', error);
+      }
     }
   };
 
@@ -104,7 +142,7 @@ const MenuTable = () => {
               <td className="py-2 px-4 border-b">${menu.price}</td>
               <td className="py-2 px-4 border-b">{menu.description}</td>
               <td className="py-2 px-4 border-b">{menu.ingredients.join(', ')}</td>
-              <td className="py-2 px-4 border-b">{menu.category ? menu.category.name : 'N/A'}</td>
+              <td className="py-2 px-4 border-b">{menu.category ? menu.category.categoryName : 'N/A'}</td>
               <td className="py-2 px-4 border-b">
                 <button
                   onClick={() => handleEdit(menu)}
@@ -112,12 +150,14 @@ const MenuTable = () => {
                 >
                   Edit
                 </button>
-                <button
-                  onClick={() => setDeletingMenu(menu)}
-                  className="px-4 py-2 bg-red-500 text-white rounded"
-                >
-                  Delete
-                </button>
+                {!editingMenu && (
+                  <button
+                    onClick={() => handleDelete(menu.id)}
+                    className="px-4 py-2 bg-red-500 text-white rounded"
+                  >
+                    Delete
+                  </button>
+                )}
               </td>
             </tr>
           ))}
@@ -154,26 +194,70 @@ const MenuTable = () => {
                 placeholder="Description"
                 className="p-2 border border-gray-300 rounded w-full"
               />
-              <input
-                type="text"
-                name="ingredients"
-                value={editForm.ingredients}
-                onChange={handleEditChange}
-                placeholder="Ingredients (comma-separated)"
-                className="p-2 border border-gray-300 rounded w-full"
-              />
-              <input
-                type="text"
-                name="category"
-                value={editForm.category}
-                onChange={handleEditChange}
-                placeholder="Category"
-                className="p-2 border border-gray-300 rounded w-full"
-              />
+              <div>
+                <label className="block mb-2">Ingredients:</label>
+                {editForm.ingredients.map((ingredient, index) => (
+                  <div key={index} className="flex items-center mb-2">
+                    <input
+                      type="text"
+                      value={ingredient}
+                      readOnly
+                      className="p-2 border border-gray-300 rounded w-full mr-2"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveIngredient(index)}
+                      className="px-2 py-1 bg-red-500 text-white rounded"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+                <div className="flex items-center mb-2">
+                  <input
+                    type="text"
+                    value={newIngredient}
+                    onChange={(e) => setNewIngredient(e.target.value)}
+                    placeholder="Add Ingredient"
+                    className="p-2 border border-gray-300 rounded w-full mr-2"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddIngredient}
+                    className="px-4 py-2 bg-green-500 text-white rounded"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label className="block mb-2">Category:</label>
+                <select
+                  name="categoryId"
+                  value={editForm.categoryId}
+                  onChange={handleEditChange}
+                  className="p-2 border border-gray-300 rounded w-full"
+                >
+                  <option value="">Select Category</option>
+                  {categories.map(category => (
+                    <option key={category.id} value={category.id}>
+                      {category.categoryName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block mb-2">Image:</label>
+                <input
+                  type="file"
+                  onChange={handleImageChange}
+                  className="p-2 border border-gray-300 rounded w-full"
+                />
+              </div>
               <button
                 type="button"
                 onClick={handleSaveEdit}
-                className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
+                className="px-4 py-2 bg-blue-500 text-white rounded"
               >
                 Save
               </button>
@@ -182,31 +266,9 @@ const MenuTable = () => {
                 onClick={() => setEditingMenu(null)}
                 className="px-4 py-2 bg-gray-500 text-white rounded"
               >
-                Close
+                Cancel
               </button>
             </form>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {deletingMenu && (
-        <div className="modal fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg w-1/2">
-            <h2 className="text-xl font-bold mb-4">Confirm Delete</h2>
-            <p>Are you sure you want to delete the menu item "{deletingMenu.name}"?</p>
-            <button
-              onClick={handleDelete}
-              className="px-4 py-2 bg-red-500 text-white rounded mr-2"
-            >
-              Yes, Delete
-            </button>
-            <button
-              onClick={() => setDeletingMenu(null)}
-              className="px-4 py-2 bg-gray-500 text-white rounded"
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}
