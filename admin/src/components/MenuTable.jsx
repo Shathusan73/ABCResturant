@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-
+import { FaEdit, FaTrash } from "react-icons/fa";
 const MenuTable = () => {
   const [menus, setMenus] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -118,18 +118,20 @@ const MenuTable = () => {
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Menu Items</h2>
-      <table className="min-w-full bg-white border border-gray-200">
-        <thead>
+    <>
+    <h2 className="text-2xl font-bold mb-4">Menu Items</h2>
+    <div className="relative  overflow-x-auto shadow-lg sm:rounded-lg bg-white">
+
+      <table className="w-full text-lg text-left text-gray-600 border-collapse">
+      <thead className="text-xs  text-gray-700 uppercase bg-gray-100">
           <tr>
-            <th className="py-2 px-4 border-b">Image</th>
-            <th className="py-2 px-4 border-b">Name</th>
-            <th className="py-2 px-4 border-b">Price</th>
-            <th className="py-2 px-4 border-b">Description</th>
-            <th className="py-2 px-4 border-b">Ingredients</th>
-            <th className="py-2 px-4 border-b">Category</th>
-            <th className="py-2 px-4 border-b">Actions</th>
+            <th className="py-3 px-4 border-b">Image</th>
+            <th className="py-3 px-4 border-b">Name</th>
+            <th className="py-3 px-4 border-b">Price</th>
+            <th className="py-3 px-4 border-b">Description</th>
+            <th className="py-3 px-4 border-b">Ingredients</th>
+            <th className="py-3 px-4 border-b">Category</th>
+            <th className="py-3 px-4 border-b">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -146,16 +148,16 @@ const MenuTable = () => {
               <td className="py-2 px-4 border-b">
                 <button
                   onClick={() => handleEdit(menu)}
-                  className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
+                  className="px-4 py-2  text-blue-500 rounded mr-2"
                 >
-                  Edit
+                    <FaEdit className="inline-block mr-1" /> 
                 </button>
                 {!editingMenu && (
                   <button
                     onClick={() => handleDelete(menu.id)}
-                    className="px-4 py-2 bg-red-500 text-white rounded"
+                    className="px-4 py-2  text-red-500 rounded"
                   >
-                    Delete
+                  <FaTrash className="inline-block mr-1" /> 
                   </button>
                 )}
               </td>
@@ -273,6 +275,7 @@ const MenuTable = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
