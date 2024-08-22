@@ -48,7 +48,7 @@ function CreateStaff() {
                 Home
               </a>
             </li>
-            <li className="flex items-center text-blue-500">
+            <li className="flex items-center text-red-950">
               <span>/Create Staff</span>
             </li>
           </ol>
