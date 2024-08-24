@@ -61,7 +61,7 @@ const CategoriesTable = () => {
       );
       const response = await axios.get("http://localhost:8080/api/categories");
       setCategories(response.data);
-      setEditingCategoryId(null); // Close the form
+      setEditingCategoryId(null); 
     } catch (error) {
       console.error("Error updating category:", error);
     }
