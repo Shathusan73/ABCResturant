@@ -4,11 +4,13 @@ import com.abcrestaurant.Backend.entity.Facility;
 import com.abcrestaurant.Backend.service.FacilityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/facilities")
+@CrossOrigin(origins = "http://localhost:3000")
 public class FacilityController {
 
     private final FacilityService facilityService;
@@ -17,31 +19,12 @@ public class FacilityController {
         this.facilityService = facilityService;
     }
 
-    @PostMapping
-    public ResponseEntity<Facility> createFacility(@RequestBody Facility facility) {
-        Facility createdFacility = facilityService.createFacility(facility);
-        return ResponseEntity.ok(createdFacility);
-    }
+    @PostMapping("/upload")
+    public ResponseEntity<Facility> createFacility(
+            @RequestParam("name") String name,
+            @RequestParam("image") MultipartFile image) throws IOException {
 
-    @GetMapping
-    public ResponseEntity<List<Facility>> getAllFacilities() {
-        return ResponseEntity.ok(facilityService.getAllFacilities());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Facility> getFacilityById(@PathVariable Long id) {
-        return ResponseEntity.ok(facilityService.getFacilityById(id));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Facility> updateFacility(@PathVariable Long id, @RequestBody Facility facilityDetails) {
-        Facility updatedFacility = facilityService.updateFacility(id, facilityDetails);
-        return ResponseEntity.ok(updatedFacility);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFacility(@PathVariable Long id) {
-        facilityService.deleteFacility(id);
-        return ResponseEntity.noContent().build();
+        Facility facility = facilityService.createFacility(name, image);
+        return ResponseEntity.ok(facility);
     }
 }

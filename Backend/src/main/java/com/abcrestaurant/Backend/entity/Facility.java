@@ -3,7 +3,6 @@ package com.abcrestaurant.Backend.entity;
 import jakarta.persistence.*;
 
 @Entity
-
 public class Facility {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +12,7 @@ public class Facility {
     private String name;
 
     @Column(nullable = false)
-    private String imageUrl;
+    private String imagePath;
 
     // Getters and Setters
     public Long getId() {
@@ -32,11 +31,11 @@ public class Facility {
         this.name = name;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

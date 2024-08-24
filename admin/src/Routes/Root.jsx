@@ -16,6 +16,10 @@ import Menu from "../pages/admin/MenuItem/Menu";
 import CreateMenu from "../pages/admin/MenuItem/CreateMenu";
 import AllCategory from "../pages/admin/Category/AllCategory";
 import CreateCategory from "../pages/admin/Category/CreateCategory";
+import Facility from "../pages/Facility/Facility";
+import CreateFacility from "../pages/Facility/CreateFacility";
+import CreateOffers from "../pages/admin/Offers/CreateOffers";
+import Offers from "../pages/admin/Offers/Offers";
 
 
 
@@ -52,14 +56,16 @@ const Root = () => {
                 )
               }
             ></Route>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="allstaff" element={<AllStaff />} />
-            <Route path="create-staff" element={<CreateStaff />} />
-            <Route path="create-category" element={ <CreateCategory/>} />
-            <Route path="menu-item" element={<Menu />} />
-            <Route path="create-menu" element={<CreateMenu />} />
-            <Route path="all-category" element={<AllCategory />} />
-         
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/allstaff" element={<AllStaff />} />
+            <Route path="/create-staff" element={<CreateStaff />} />
+            <Route path="/create-category" element={ <CreateCategory/>} />
+            <Route path="/menu-item" element={<Menu />} />
+            <Route path="/create-menu" element={<CreateMenu />} />
+            <Route path="/all-category" element={<AllCategory />} />
+            <Route path="/facility" element={<Offers/>} />
+            <Route path="/create-offers" element={<CreateOffers/>} />
+           
           </Route>
         )}
         <Route

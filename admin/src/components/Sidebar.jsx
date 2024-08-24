@@ -4,10 +4,10 @@ import { BiTask } from "react-icons/bi";
 import { MdCategory } from "react-icons/md";
 import { BiSolidDashboard } from "react-icons/bi";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
-import { FaUserDoctor } from "react-icons/fa6";
 import { FaHospitalUser } from "react-icons/fa";
 import { MdOutlinePayment } from "react-icons/md";
 import { IoPersonCircleSharp } from "react-icons/io5";
+import { SiIfood } from "react-icons/si";
 
 const getLinksByUserRole = (userRole) => {
   if (userRole === "admin") {
@@ -33,9 +33,9 @@ const getLinksByUserRole = (userRole) => {
         icon: <MdOutlineRestaurantMenu className="text-[20px]" />,
       },
       {
-        to: "/Categories",
-        text: "Doctors",
-        icon: <FaUserDoctor className="text-[20px]" />,
+        to: "/facility",
+        text: "Offers",
+        icon: <SiIfood className="text-[20px]" />,
       },
       {
         to: "/technicians",
