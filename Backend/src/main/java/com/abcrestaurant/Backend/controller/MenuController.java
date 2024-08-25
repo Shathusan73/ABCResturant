@@ -32,11 +32,14 @@ public class MenuController {
             @RequestParam("description") String description,
             @RequestParam("ingredients") List<String> ingredients,
             @RequestParam("categoryId") Long categoryId,
-            @RequestParam("image") MultipartFile image) {
+            @RequestParam("image") MultipartFile image,
+            @RequestParam("offerStatus") Boolean offerStatus, // New field
+            @RequestParam("offerClickPercentage") Double offerClickPercentage, // New field
+            @RequestParam("finalPrice") Double finalPrice) { // New field
 
         try {
             String imagePath = menuService.saveImage(image);
-            Menu menu = menuService.createMenu(name, price, description, ingredients, categoryId, imagePath);
+            Menu menu = menuService.createMenu(name, price, description, ingredients, categoryId, imagePath, offerStatus, offerClickPercentage, finalPrice);
             return ResponseEntity.ok(menu);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -51,14 +54,17 @@ public class MenuController {
             @RequestParam("description") String description,
             @RequestParam("ingredients") List<String> ingredients,
             @RequestParam(value = "categoryId", required = false) Long categoryId,
-            @RequestParam(value = "image", required = false) MultipartFile image) {
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @RequestParam(value = "offerStatus", required = false) Boolean offerStatus, // New field
+            @RequestParam(value = "offerClickPercentage", required = false) Double offerClickPercentage, // New field
+            @RequestParam(value = "finalPrice", required = false) Double finalPrice) { // New field
 
         try {
             String imagePath = null;
             if (image != null) {
                 imagePath = menuService.saveImage(image);
             }
-            Menu menu = menuService.updateMenu(id, name, price, description, ingredients, categoryId, imagePath);
+            Menu menu = menuService.updateMenu(id, name, price, description, ingredients, categoryId, imagePath, offerStatus, offerClickPercentage, finalPrice);
             return ResponseEntity.ok(menu);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

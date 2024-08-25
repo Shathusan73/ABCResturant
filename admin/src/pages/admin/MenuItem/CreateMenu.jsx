@@ -12,6 +12,11 @@ const CreateMenu = () => {
   const [image, setImage] = useState(null);
   const [ingredientInput, setIngredientInput] = useState('');
 
+  // New state variables
+  const [offerStatus, setOfferStatus] = useState(false);
+  const [offerClickPercentage, setOfferClickPercentage] = useState('0');
+  const [finalPrice, setFinalPrice] = useState('');
+
   useEffect(() => {
     // Fetch categories from the backend
     axios.get('http://localhost:8080/api/categories')
@@ -22,6 +27,17 @@ const CreateMenu = () => {
         console.error('There was an error fetching the categories!', error);
       });
   }, []);
+
+  // Calculate final price based on the discount percentage
+  useEffect(() => {
+    if (price && offerClickPercentage) {
+      const discount = (price * offerClickPercentage) / 100;
+      const newFinalPrice = price - discount;
+      setFinalPrice(newFinalPrice.toFixed(2));
+    } else {
+      setFinalPrice(price); // Show the original price if no offer is applied
+    }
+  }, [price, offerClickPercentage, offerStatus]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,6 +55,9 @@ const CreateMenu = () => {
     formData.append('ingredients', ingredients.join(','));
     formData.append('categoryId', categoryId);
     formData.append('image', image);
+    formData.append('offerStatus', offerStatus);
+    formData.append('offerClickPercentage', offerClickPercentage || '0'); // Default to '0' if not set
+    formData.append('finalPrice', finalPrice || price); // Default to original price if finalPrice is empty
 
     try {
       const response = await axios.post('http://localhost:8080/api/menus', formData, {
@@ -56,6 +75,9 @@ const CreateMenu = () => {
         setIngredients([]);
         setCategoryId('');
         setImage(null);
+        setOfferStatus(false);
+        setOfferClickPercentage('0');
+        setFinalPrice('');
       }
     } catch (error) {
       toast.error('Failed to create menu item');
@@ -75,6 +97,7 @@ const CreateMenu = () => {
       <h2 className="text-2xl font-bold mb-4">Create Menu Item</h2>
 
       <form onSubmit={handleSubmit}>
+        {/* Existing fields */}
         <div className="mb-4">
           <label className="block text-gray-700">Name</label>
           <input
@@ -108,6 +131,44 @@ const CreateMenu = () => {
           />
         </div>
 
+        {/* New offer fields */}
+        <div className="mb-4">
+          <label className="block text-gray-700">Offer Status</label>
+          <input
+            type="checkbox"
+            checked={offerStatus}
+            onChange={(e) => setOfferStatus(e.target.checked)}
+            className="mr-2"
+          />
+          <span>{offerStatus ? 'Active' : 'Inactive'}</span>
+        </div>
+
+        {offerStatus && (
+          <>
+            <div className="mb-4">
+              <label className="block text-gray-700">Offer Click Percentage</label>
+              <input
+                type="number"
+                value={offerClickPercentage}
+                onChange={(e) => setOfferClickPercentage(e.target.value)}
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500"
+                placeholder="Enter discount percentage"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700">Final Price</label>
+              <input
+                type="text"
+                value={finalPrice}
+                readOnly
+                className="w-full px-3 py-2 border rounded-lg bg-gray-100"
+              />
+            </div>
+          </>
+        )}
+
+        {/* Existing fields */}
         <div className="mb-4">
           <label className="block text-gray-700">Ingredients</label>
           <div className="flex items-center mb-2">

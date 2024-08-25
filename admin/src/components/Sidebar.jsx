@@ -4,11 +4,11 @@ import { BiTask } from "react-icons/bi";
 import { MdCategory } from "react-icons/md";
 import { BiSolidDashboard } from "react-icons/bi";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
-import { FaHospitalUser } from "react-icons/fa";
 import { MdOutlinePayment } from "react-icons/md";
 import { IoPersonCircleSharp } from "react-icons/io5";
 import { SiIfood } from "react-icons/si";
-
+import { GiFoodTruck } from "react-icons/gi";
+import { MdOutlineTableRestaurant } from "react-icons/md";
 const getLinksByUserRole = (userRole) => {
   if (userRole === "admin") {
     return [
@@ -39,13 +39,13 @@ const getLinksByUserRole = (userRole) => {
       },
       {
         to: "/technicians",
-        text: "Technicians",
-        icon: <FaHospitalUser className="text-[20px]" />,
+        text: "Orders",
+        icon: <GiFoodTruck className="text-[20px]" />,
       },
       {
         to: "/payments",
-        text: "Payments",
-        icon: <MdOutlinePayment className="text-[20px]" />,
+        text: "Tables Booking",
+        icon: <MdOutlineTableRestaurant className="text-[20px]" />,
       },
       /*   {
         to: "/account",

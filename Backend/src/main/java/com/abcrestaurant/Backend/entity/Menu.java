@@ -15,6 +15,9 @@ public class Menu {
     private Double price;
     private String description;
     private String imageUrl;
+    private Boolean offerStatus; // New field
+    private Double offerClickPercentage; // New field
+    private Double finalPrice; // New field
 
     @ElementCollection
     private List<String> ingredients;
@@ -27,13 +30,16 @@ public class Menu {
     public Menu() {}
 
     // Parameterized constructor
-    public Menu(String name, Double price, String description, String imageUrl, List<String> ingredients, Category category) {
+    public Menu(String name, Double price, String description, String imageUrl, List<String> ingredients, Category category, Boolean offerStatus, Double offerClickPercentage, Double finalPrice) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.imageUrl = imageUrl;
         this.ingredients = ingredients;
         this.category = category;
+        this.offerStatus = offerStatus;
+        this.offerClickPercentage = offerClickPercentage;
+        this.finalPrice = finalPrice;
     }
 
     // Getters and setters
@@ -91,5 +97,29 @@ public class Menu {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Boolean getOfferStatus() {
+        return offerStatus;
+    }
+
+    public void setOfferStatus(Boolean offerStatus) {
+        this.offerStatus = offerStatus;
+    }
+
+    public Double getOfferClickPercentage() {
+        return offerClickPercentage;
+    }
+
+    public void setOfferClickPercentage(Double offerClickPercentage) {
+        this.offerClickPercentage = offerClickPercentage;
+    }
+
+    public Double getFinalPrice() {
+        return finalPrice;
+    }
+
+    public void setFinalPrice(Double finalPrice) {
+        this.finalPrice = finalPrice;
     }
 }
