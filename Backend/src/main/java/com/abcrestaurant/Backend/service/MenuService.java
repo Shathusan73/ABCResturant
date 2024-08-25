@@ -33,11 +33,11 @@ public class MenuService {
         return image.getOriginalFilename();
     }
 
-    public Menu createMenu(String name, Double price, String description, List<String> ingredients, Long categoryId, String imagePath) {
+    public Menu createMenu(String name, Double price, String description, List<String> ingredients, Long categoryId, String imagePath, Boolean offerStatus, Double offerClickPercentage, Double finalPrice) {
         Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
         if (categoryOptional.isPresent()) {
             Category category = categoryOptional.get();
-            Menu menu = new Menu(name, price, description, imagePath, ingredients, category);
+            Menu menu = new Menu(name, price, description, imagePath, ingredients, category, offerStatus, offerClickPercentage, finalPrice);
             return menuRepository.save(menu);
         }
         return null;
@@ -47,7 +47,7 @@ public class MenuService {
         return menuRepository.findAll();
     }
 
-    public Menu updateMenu(Long id, String name, Double price, String description, List<String> ingredients, Long categoryId, String imagePath) {
+    public Menu updateMenu(Long id, String name, Double price, String description, List<String> ingredients, Long categoryId, String imagePath, Boolean offerStatus, Double offerClickPercentage, Double finalPrice) {
         Optional<Menu> optionalMenu = menuRepository.findById(id);
         if (optionalMenu.isPresent()) {
             Menu menu = optionalMenu.get();
@@ -63,6 +63,18 @@ public class MenuService {
 
             if (imagePath != null) {
                 menu.setImageUrl(imagePath);
+            }
+
+            if (offerStatus != null) {
+                menu.setOfferStatus(offerStatus);
+            }
+
+            if (offerClickPercentage != null) {
+                menu.setOfferClickPercentage(offerClickPercentage);
+            }
+
+            if (finalPrice != null) {
+                menu.setFinalPrice(finalPrice);
             }
 
             return menuRepository.save(menu);
