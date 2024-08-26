@@ -3,7 +3,7 @@ import Slider from '@mui/material/Slider';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
-import { FaImage } from 'react-icons/fa'; // Image icon for upload
+import { FaImage } from 'react-icons/fa'; 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -24,19 +24,19 @@ function CreateOffers() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Create form data to send to the backend
+    
     const formData = new FormData();
     formData.append('name', name);
     formData.append('percentage', percentage);
     formData.append('description', description);
 
-    // Append the image file directly if selected
+    
     if (imageFile) {
       formData.append('image', imageFile);
     }
 
     try {
-      // Make the POST request to backend
+    
       const result = await axios.post('http://localhost:8080/api/offers', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -44,10 +44,10 @@ function CreateOffers() {
       });
       console.log('Form submitted successfully:', result.data);
 
-      // Show success toast notification
+    
       toast.success('Offer created successfully!');
 
-      // Reset form fields
+      
       setName('');
       setPercentage('');
       setDescription('');
@@ -55,7 +55,7 @@ function CreateOffers() {
 
     } catch (error) {
       console.error('Error submitting form:', error.response || error);
-      // Show error toast notification
+      
       toast.error('Error submitting form. Please try again.');
     }
   };
@@ -108,7 +108,7 @@ function CreateOffers() {
           Submit Offer
         </Button>
       </form>
-      <ToastContainer /> {/* Toast Container for showing toast notifications */}
+      <ToastContainer /> 
     </div>
   );
 }
