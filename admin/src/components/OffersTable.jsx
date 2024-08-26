@@ -14,7 +14,7 @@ function OffersTable() {
     name: '',
     percentage: '',
     description: '',
-    image: null, // Add this line to handle the image
+    image: null, 
   });
 
   useEffect(() => {
@@ -44,7 +44,7 @@ function OffersTable() {
   const handleImageChange = (event) => {
     setFormData({
       ...formData,
-      image: event.target.files[0], // Update image state
+      image: event.target.files[0], 
     });
   };
 
@@ -54,7 +54,7 @@ function OffersTable() {
     formDataToSend.append('percentage', formData.percentage);
     formDataToSend.append('description', formData.description);
     if (formData.image) {
-      formDataToSend.append('image', formData.image); // Append image file
+      formDataToSend.append('image', formData.image); 
     }
 
     try {

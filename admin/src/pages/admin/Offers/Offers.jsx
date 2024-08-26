@@ -30,7 +30,7 @@ function Offers() {
     <OffersTable/>
     </div>
 
-    {/* Create or Update Form */}
+  
     
   </div>
     
