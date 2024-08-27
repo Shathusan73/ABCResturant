@@ -43,7 +43,7 @@ const getLinksByUserRole = (userRole) => {
         icon: <GiFoodTruck className="text-[20px]" />,
       },
       {
-        to: "/payments",
+        to: "/all-bookings",
         text: "Tables Booking",
         icon: <MdOutlineTableRestaurant className="text-[20px]" />,
       },
