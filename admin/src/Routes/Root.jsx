@@ -20,6 +20,8 @@ import Facility from "../pages/Facility/Facility";
 import CreateFacility from "../pages/Facility/CreateFacility";
 import CreateOffers from "../pages/admin/Offers/CreateOffers";
 import Offers from "../pages/admin/Offers/Offers";
+import AllBookings from "../pages/admin/TableBooking/AllBookings";
+import CreateBookingForm from "../pages/admin/TableBooking/CreateBookingForm";
 
 
 
@@ -65,7 +67,8 @@ const Root = () => {
             <Route path="/all-category" element={<AllCategory />} />
             <Route path="/facility" element={<Offers/>} />
             <Route path="/create-offers" element={<CreateOffers/>} />
-           
+            <Route path="/all-bookings" element={<AllBookings />} />
+            <Route path="/create-table" element={<CreateBookingForm />} />
           </Route>
         )}
         <Route
