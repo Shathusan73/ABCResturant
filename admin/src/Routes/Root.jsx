@@ -22,6 +22,7 @@ import CreateOffers from "../pages/admin/Offers/CreateOffers";
 import Offers from "../pages/admin/Offers/Offers";
 import AllBookings from "../pages/admin/TableBooking/AllBookings";
 import CreateBookingForm from "../pages/admin/TableBooking/CreateBookingForm";
+import ContactFormTable from "../components/ContactFormTable";
 
 
 
@@ -53,7 +54,7 @@ const Root = () => {
                   <Dashboard userRole={userRole} />
                 ) : (
                   <>
-                    {/* <PatientDashboard userRole={userRole} /> */}
+                   
                   </>
                 )
               }
@@ -69,6 +70,7 @@ const Root = () => {
             <Route path="/create-offers" element={<CreateOffers/>} />
             <Route path="/all-bookings" element={<AllBookings />} />
             <Route path="/create-table" element={<CreateBookingForm />} />
+            <Route path="/form-table" element={<ContactFormTable />} />
           </Route>
         )}
         <Route
