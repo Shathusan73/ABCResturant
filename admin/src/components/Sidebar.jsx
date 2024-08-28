@@ -47,6 +47,13 @@ const getLinksByUserRole = (userRole) => {
         text: "Tables Booking",
         icon: <MdOutlineTableRestaurant className="text-[20px]" />,
       },
+
+
+      {
+        to: "/form-table",
+        text: "Message",
+        icon: <MdOutlineTableRestaurant className="text-[20px]" />,
+      },
       /*   {
         to: "/account",
         text: "Accounts",

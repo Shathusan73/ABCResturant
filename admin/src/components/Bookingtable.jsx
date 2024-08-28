@@ -79,14 +79,17 @@ const BookingTable = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
+      
       case 'CONFIRMED':
-        return 'text-green-500 text-white';
-      case 'PENDING':
         return 'text-yellow-500 text-white';
+      case 'PENDING':
+        return ' text-blue-700  text-white';
       case 'CANCELLED':
         return 'text-red-500 text-white ';
+        case 'COMPLETED':
+          return 'text-green-500 ';
       default:
-        return 'text-gray-500 text-white';
+        return 'text-red-500  text-white';
     }
   };
 
@@ -102,7 +105,7 @@ const BookingTable = () => {
             <th className="py-3 px-4 border-b">Address</th>
             <th className="py-3 px-4 border-b">Phone</th>
             <th className="py-3 px-4 border-b">Date of Birth</th>
-            <th className="py-3 px-4 border-b">Booking Time</th>
+            <th className="py-3 px-4 border-b"> Booking Date & Time</th>
             <th className="py-3 px-4 border-b">Persons</th>
             <th className="py-3 px-4 border-b">Message</th>
             <th className="py-3 px-4 border-b">Special Requests</th>
@@ -123,7 +126,7 @@ const BookingTable = () => {
               <td className="py-4 px-4 font-medium border-b">{booking.persons}</td>
               <td className="py-4 px-4 font-medium border-b">{booking.message}</td>
               <td className="py-4 px-4   font-medium border-b">{booking.specialRequests}</td>
-              <td className={`py-4 px-4  font-medium  border-b ${getStatusColor(booking.status)}`}>
+              <td className={`py-4 px-4  font-medium    border-b ${getStatusColor(booking.status)}`}>
   {booking.status}
 </td>
               <td className="py-4 px-4 font-medium border-b  space-x-2">

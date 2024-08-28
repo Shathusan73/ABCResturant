@@ -3,7 +3,7 @@ import axios from 'axios';
 import { FaPlusSquare } from 'react-icons/fa';
 import { RxSlash } from 'react-icons/rx';
 import StaffTable from '../../../components/StaffTable';
-
+import { toast } from 'react-toastify';
 function AllStaff() {
   const [staff, setStaff] = useState([]);
   const [editStaff, setEditStaff] = useState(null);
@@ -13,6 +13,7 @@ function AllStaff() {
   const [updatedPassword, setUpdatedPassword] = useState('');
   const [updatedNic, setUpdatedNic] = useState('');
   const [error, setError] = useState('');
+  
 
   useEffect(() => {
     fetchStaff();
@@ -22,6 +23,7 @@ function AllStaff() {
     try {
       const response = await axios.get('http://localhost:8080/api/staff');
       setStaff(response.data);
+      
     } catch (error) {
       console.error('Failed to fetch staff:', error);
     }
@@ -31,6 +33,7 @@ function AllStaff() {
     try {
       await axios.delete(`http://localhost:8080/api/staff/${id}`);
       fetchStaff();
+      toast.success('Staff member deleted successfully!');
     } catch (error) {
       console.error('Failed to delete staff:', error);
     }
@@ -63,6 +66,7 @@ function AllStaff() {
       await axios.put(`http://localhost:8080/api/staff/${editStaff.id}`, updatedData);
       fetchStaff();
       setEditStaff(null);
+      toast.success('Staff member updated successfully!');
     } catch (error) {
       setError('Failed to update staff');
       console.error('Failed to update staff:', error);
