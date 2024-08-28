@@ -43,11 +43,18 @@ const BookingTable = () => {
 
   const handleSave = async () => {
     try {
-      await axios.put(`http://localhost:8080/api/bookings/${formData.id}`, formData);
+      const formattedData = {
+        ...formData,
+        bookingTime: new Date(formData.bookingTime).toISOString(), // Ensure correct format
+        dateOfBirth: new Date(formData.dateOfBirth).toISOString() // Ensure correct format
+      };
+
+      await axios.put(`http://localhost:8080/api/bookings/${formData.id}`, formattedData);
       setIsModalOpen(false);
       fetchBookings();
       toast.success('Booking updated successfully.');
     } catch (error) {
+      console.error('Error updating booking:', error); // Log the error
       toast.error('Error updating booking.');
     }
   };
@@ -72,52 +79,54 @@ const BookingTable = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Confirmed':
-        return 'bg-green-500 text-white';
-      case 'Pending':
-        return 'bg-yellow-500 text-white';
-      case 'Cancelled':
-        return 'bg-red-500 text-white';
+      case 'CONFIRMED':
+        return 'text-green-500 text-white';
+      case 'PENDING':
+        return 'text-yellow-500 text-white';
+      case 'CANCELLED':
+        return 'text-red-500 text-white ';
       default:
-        return 'bg-gray-500 text-white';
+        return 'text-gray-500 text-white';
     }
   };
 
   return (
-    <div className="max-w-screen-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
+    <div className="overflow-x-auto  bg-white p-8 rounded-lg shadow-lg">
       <h2 className="text-2xl font-semibold mb-6">Booking Table</h2>
-      <table className="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <thead className="bg-gray-100">
+      <table className="w-full  text-sm text-left text-gray-600 border-collapse">
+      <thead className="text-xs  w-full  text-gray-700 uppercase bg-gray-100">
           <tr>
-            <th className="px-4 py-2 border-b">ID</th>
-            <th className="px-4 py-2 border-b">Name</th>
-            <th className="px-4 py-2 border-b">Email</th>
-            <th className="px-4 py-2 border-b">Address</th>
-            <th className="px-4 py-2 border-b">Phone</th>
-            <th className="px-4 py-2 border-b">Date of Birth</th>
-            <th className="px-4 py-2 border-b">Booking Time</th>
-            <th className="px-4 py-2 border-b">Persons</th>
-            <th className="px-4 py-2 border-b">Message</th>
-            <th className="px-4 py-2 border-b">Special Requests</th>
-            <th className="px-4 py-2 border-b">Status</th>
-            <th className="px-4 py-2 border-b">Actions</th>
+            <th className="py-3 px-4 border-b">ID</th>
+            <th className="py-3 px-4 border-b">Name</th>
+            <th className="py-3 px-4 border-b">Email</th>
+            <th className="py-3 px-4 border-b">Address</th>
+            <th className="py-3 px-4 border-b">Phone</th>
+            <th className="py-3 px-4 border-b">Date of Birth</th>
+            <th className="py-3 px-4 border-b">Booking Time</th>
+            <th className="py-3 px-4 border-b">Persons</th>
+            <th className="py-3 px-4 border-b">Message</th>
+            <th className="py-3 px-4 border-b">Special Requests</th>
+            <th className="py-3 px-4 border-b ">Status</th>
+            <th className="py-3 px-4 border-b">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody >
           {bookings.map((booking) => (
-            <tr key={booking.id}>
-              <td className="px-4 py-2 border-b">{booking.id}</td>
-              <td className="px-4 py-2 border-b">{booking.name}</td>
-              <td className="px-4 py-2 border-b">{booking.email}</td>
-              <td className="px-4 py-2 border-b">{booking.address}</td>
-              <td className="px-4 py-2 border-b">{booking.phone}</td>
-              <td className="px-4 py-2 border-b">{new Date(booking.dateOfBirth).toLocaleDateString()}</td>
-              <td className="px-4 py-2 border-b">{new Date(booking.bookingTime).toLocaleString()}</td>
-              <td className="px-4 py-2 border-b">{booking.persons}</td>
-              <td className="px-4 py-2 border-b">{booking.message}</td>
-              <td className="px-4 py-2 border-b">{booking.specialRequests}</td>
-              <td className={`px-4 py-2 border-b ${getStatusColor(booking.status)}`}>{booking.status}</td>
-              <td className="px-4 py-2 border-b flex space-x-2">
+            <tr key={booking.id} className=''>
+              <td className="py-4 px-4 font-medium border-b">{booking.id}</td>
+              <td className="py-4 px-4 font-medium border-b">{booking.name}</td>
+              <td className="py-4 px-4 font-medium border-b">{booking.email}</td>
+              <td className="py-4 px-4 font-medium border-b">{booking.address}</td>
+              <td className="py-4 px-4 font-medium border-b">{booking.phone}</td>
+              <td className="py-4 px-4 font-medium border-b">{new Date(booking.dateOfBirth).toLocaleDateString()}</td>
+              <td className="py-4 px-4 font-medium border-b">{new Date(booking.bookingTime).toLocaleString()}</td>
+              <td className="py-4 px-4 font-medium border-b">{booking.persons}</td>
+              <td className="py-4 px-4 font-medium border-b">{booking.message}</td>
+              <td className="py-4 px-4   font-medium border-b">{booking.specialRequests}</td>
+              <td className={`py-4 px-4  font-medium  border-b ${getStatusColor(booking.status)}`}>
+  {booking.status}
+</td>
+              <td className="py-4 px-4 font-medium border-b  space-x-2">
                 <button onClick={() => handleEdit(booking)} className="text-blue-500 hover:text-blue-700">
                   <FaEdit />
                 </button>
@@ -131,12 +140,12 @@ const BookingTable = () => {
       </table>
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-11/12 max-w-lg relative">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl relative">
             <button onClick={() => setIsModalOpen(false)} className="absolute top-2 right-2 text-gray-500">
               <FaTimes />
             </button>
             <h2 className="text-xl font-semibold mb-4">Edit Booking</h2>
-            <form onSubmit={(e) => e.preventDefault()}>
+            <form onSubmit={(e) => e.preventDefault()} className="grid grid-cols-2 gap-4">
               <div className="mb-4">
                 <label className="block text-gray-700">Name</label>
                 <input
@@ -184,7 +193,7 @@ const BookingTable = () => {
                 <input
                   type="date"
                   name="dateOfBirth"
-                  value={formData.dateOfBirth}
+                  value={formData.dateOfBirth.split('T')[0]} // Format to match input type
                   onChange={handleChange}
                   className="w-full border border-gray-300 p-2 rounded"
                 />
@@ -194,7 +203,7 @@ const BookingTable = () => {
                 <input
                   type="datetime-local"
                   name="bookingTime"
-                  value={formData.bookingTime}
+                  value={formData.bookingTime.split('T').join('T')} // Format to match input type
                   onChange={handleChange}
                   className="w-full border border-gray-300 p-2 rounded"
                 />
@@ -211,7 +220,8 @@ const BookingTable = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">Message</label>
-                <textarea
+                <input
+                  type="text"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
@@ -225,6 +235,7 @@ const BookingTable = () => {
                   value={formData.specialRequests}
                   onChange={handleChange}
                   className="w-full border border-gray-300 p-2 rounded"
+                  rows={2}
                 />
               </div>
               <div className="mb-4">
@@ -235,20 +246,27 @@ const BookingTable = () => {
                   onChange={handleChange}
                   className="w-full border border-gray-300 p-2 rounded"
                 >
-                  <option value="">Select Status</option>
-                  <option value="Confirmed">Confirmed</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Cancelled">Cancelled</option>
+                  <option value="PENDING">PENDING</option>
+                  <option value="CONFIRMED">CONFIRMED</option>
+                  <option value="CANCELLED">CANCELLED</option>
+                  <option value="COMPLETED">Completed</option>
                 </select>
               </div>
-              <button
-                type="button"
-                onClick={handleSave}
-                className="bg-blue-500 text-white p-2 rounded"
-              >
-                Save Changes
-              </button>
             </form>
+            <div className="flex justify-end space-x-4 mt-6">
+              <button
+                onClick={handleSave}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="bg-gray-300 hover:bg-gray-500 text-gray-700 font-bold py-2 px-4 rounded"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}
