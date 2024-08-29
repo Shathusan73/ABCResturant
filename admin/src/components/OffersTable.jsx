@@ -95,7 +95,7 @@ function OffersTable() {
 
   return (
     <>
-      <div className="flex gap-[32px]">
+      <div className=" w-full gap-[32px]">
         <div className="w-f  p-6 bg-white shadow-md rounded-md">
           <h2 className="text-2xl font-semibold text-gray-700 mb-4">
             Offers List
@@ -209,41 +209,7 @@ function OffersTable() {
             </div>
           </Modal>
         </div>
-        <div className="grid grid-cols-2 gap-[16px]  ">
-          {offers.map((offer) => (
-            <div
-              key={offer.id}
-              className="container  bg-gradient-to-r from-indigo-950 to-black text-white p-8 rounded-lg shadow-lg "
-            >
-              <div className="text-3xl font-bold mb-4">Special Offer!</div>
-              <div className="text-lg mb-4">
-                Get{" "}
-                <span className="text-yellow-400 font-bold">
-                  {offer.percentage}% OFF
-                </span>{" "}
-                your next purchase!
-              </div>
-
-              <div>
-                <img
-                  src={`http://localhost:8080/uploads/images/${offer.imageUrl}`}
-                  alt={offer.name}
-                  className=" w-[400px] h-[200px]  object-cover"
-                />
-              </div>
-              <div className="text-sm flex flex-col gap-[4px] mt-4">
-                <p className="text-yellow-400 font-bold">{offer.name}</p>
-                <p>{offer.description}</p>
-              </div>
-            </div>
-          ))}
-
-          {/* <div className="grid grid-cols-2 gap-[16px]  ">
-            {offers.map((offer) => (
-      
-            ))}
-          </div> */}
-        </div>
+        
       </div>
     </>
   );
