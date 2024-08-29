@@ -28,21 +28,21 @@ const CreateMenu = () => {
       });
   }, []);
 
-  // Calculate final price based on the discount percentage
+ 
   useEffect(() => {
     if (price && offerClickPercentage) {
       const discount = (price * offerClickPercentage) / 100;
       const newFinalPrice = price - discount;
       setFinalPrice(newFinalPrice.toFixed(2));
     } else {
-      setFinalPrice(price); // Show the original price if no offer is applied
+      setFinalPrice(price); 
     }
   }, [price, offerClickPercentage, offerStatus]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate form fields
+
     if (!name || !price || !description || ingredients.length === 0 || !categoryId || !image) {
       toast.error('Please fill in all fields');
       return;
@@ -68,7 +68,7 @@ const CreateMenu = () => {
 
       if (response.status === 200) {
         toast.success('Menu item created successfully!');
-        // Reset form after success
+      
         setName('');
         setPrice('');
         setDescription('');
@@ -97,7 +97,7 @@ const CreateMenu = () => {
       <h2 className="text-2xl font-bold mb-4">Create Menu Item</h2>
 
       <form onSubmit={handleSubmit}>
-        {/* Existing fields */}
+   
         <div className="mb-4">
           <label className="block text-gray-700">Name</label>
           <input

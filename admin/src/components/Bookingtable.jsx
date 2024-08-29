@@ -83,18 +83,37 @@ const BookingTable = () => {
       case 'CONFIRMED':
         return 'text-yellow-500 text-white';
       case 'PENDING':
-        return ' text-blue-700  text-white';
+        return ' text-blue-700  ';
       case 'CANCELLED':
-        return 'text-red-500 text-white ';
+        return 'text-red-500  ';
         case 'COMPLETED':
           return 'text-green-500 ';
       default:
         return 'text-red-500  text-white';
     }
   };
-
+  const countStatus = (status) => bookings.filter(booking => booking.status === status).length;
   return (
     <div className="overflow-x-auto  bg-white p-8 rounded-lg shadow-lg">
+       <h2 className="text-2xl font-semibold mb-6">Booking Dashboard</h2>
+      <div className="grid grid-cols-4 gap-6 mb-6">
+        <div className="p-4 bg-yellow-500 text-white rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold">Confirmed</h3>
+          <p className="text-2xl">{countStatus('CONFIRMED')}</p>
+        </div>
+        <div className="p-4 bg-blue-500 text-white rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold">Pending</h3>
+          <p className="text-2xl">{countStatus('PENDING')}</p>
+        </div>
+        <div className="p-4 bg-red-500 text-white rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold">Cancelled</h3>
+          <p className="text-2xl">{countStatus('CANCELLED')}</p>
+        </div>
+        <div className="p-4 bg-green-500 text-white rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold">Completed</h3>
+          <p className="text-2xl">{countStatus('COMPLETED')}</p>
+        </div>
+      </div>
       <h2 className="text-2xl font-semibold mb-6">Booking Table</h2>
       <table className="w-full  text-sm text-left text-gray-600 border-collapse">
       <thead className="text-xs  w-full  text-gray-700 uppercase bg-gray-100">
