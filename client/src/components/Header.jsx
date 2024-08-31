@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-// import HeaderMenu from "./HeaderMenu";
-// import { ArrowWhite } from "../constants/Data";
 import { IoMdClose } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import useWindowSize from "../Hooks/UseWindowSize";
-// import { HeaderActiveIcon } from "../constants/Data";
 import Contact from "../pages/Contact";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { FaSignOutAlt, FaUser } from "react-icons/fa";
+
 function Header() {
   const [showContactForm, setShowContactForm] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
@@ -16,6 +18,48 @@ function Header() {
   const location = useLocation();
   const [isIconVisible, setIsIconVisible] = useState(false);
   const size = useWindowSize();
+  const [isLoginForm, setIsLoginForm] = useState(true);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [showLogoutButton, setShowLogoutButton] = useState(false);
+
+  const formRef = useRef(null);
+
+  useEffect(() => {
+    // Retrieve login state from localStorage on component mount
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setIsLoggedIn(true);
+      setUsername(storedUsername);
+    }
+  }, []);
+
+  const toggleForm = () => {
+    setIsLoginForm(!isLoginForm);
+  };
+
+  const openForm = () => {
+    setIsFormOpen(true);
+  };
+
+  const closeForm = () => {
+    setIsFormOpen(false);
+  };
+
+  const handleClickOutside = (event) => {
+    if (formRef.current && !formRef.current.contains(event.target)) {
+      closeForm();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const toggleContactForm = () => {
     setShowContactForm(!showContactForm);
   };
@@ -83,6 +127,90 @@ function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [prevScrollPos]);
+
+  
+
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    const email = event.target.email.value.trim();
+    const password = event.target.password.value.trim();
+    const username = event.target.username?.value.trim();
+    const phoneNumber = event.target.phoneNumber?.value.trim();
+
+    if (isLoginForm) {
+      if (!email || !password) {
+        toast.error("Please fill in all fields.");
+        return;
+      }
+      if (!validateEmail(email)) {
+        toast.error("Invalid email format.");
+        return;
+      }
+      try {
+        const response = await axios.post('http://localhost:8080/api/customers/login', { email, password });
+        toast.success("Login successful!");
+        setIsLoggedIn(true);
+        setUsername(response.data.username);
+        localStorage.setItem('username', response.data.username);
+        closeForm();
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          toast.error("Incorrect email or password.");
+        } else {
+          toast.error("An error occurred. Please try again.");
+        }
+      }
+    } else {
+      if (!username || !email || !phoneNumber || !password) {
+        toast.error("Please fill in all fields.");
+        return;
+      }
+      if (!validateEmail(email)) {
+        toast.error("Invalid email format.");
+        return;
+      }
+      try {
+        await axios.post('http://localhost:8080/api/customers/register', { username, email, phoneNumber, password });
+        toast.success("Registration successful! Please log in.");
+        setIsLoginForm(true);
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          toast.error("Email or phone number already exists.");
+        } else {
+          toast.error("An error occurred. Please try again.");
+        }
+      }
+    }
+  };
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUsername("");
+    localStorage.removeItem('username');
+    setShowLogoutButton(true);
+
+    // Hide logout button after 3 seconds
+   
+  };
+
+  const handleUsernameClick = () => {
+    // Show the logout button only when the user clicks on the username
+    if (isLoggedIn) {
+      setShowLogoutButton(!showLogoutButton);
+    }
+  };
+  
+  useEffect(() => {
+    // Close the form when clicked outside
+    const handleClickOutside = (event) => {
+      if (formRef.current && !formRef.current.contains(event.target)) {
+        closeForm();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
   return (
     <>
       <div
@@ -97,19 +225,18 @@ function Header() {
               onClick={() => handleLinkClick("home")}
             >
               <Link to="/">
-               <h2 className="text-[32px] text-[#FBA819] font-bold">ABC</h2>
+                <h2 className="text-[32px] text-[#FBA819] font-bold">ABC</h2>
               </Link>
               <div className=" md:flex flex-col hidden text-white gap-[2px] items-start justify-center border-l border-l-[#fba81975] px-[6px] shadow-left">
                 <h3 className=" text-start font-bold md:text-[16px] text-[10px] uppercase font-PlusJakartaSans">
                   <Link to="/">ABC RESTURANT</Link>
                 </h3>
                 <p className="text-[#dfdfdf] text-start  uppercase font-light md:text-[10px] text-[8px]  font-Manrope">
-                  <Link to="/">  A taste of excellence</Link>
+                  <Link to="/"> A taste of excellence</Link>
                 </p>
               </div>
             </div>
             <div className="hidden lg:flex gap-[16px] items-center font-medium text-[16px] text-start text-[#FBA819] font-Manrope">
-             
               <div
                 className={`flex headerLink items-center gap-[6px] px-[12px] py-[8px] ${
                   activeLink === "aboutus"
@@ -191,18 +318,130 @@ function Header() {
                 onClick={toggleContactForm}
               >
                 CONTACT
-                {/* <img
-                  src={ArrowWhite}
-                  alt="ArrowWhite"
-                  className="w-[20px] icon-btn h-[19px]"
-                /> */}
               </div>
 
-              
-    <div className="w-fit rounded-xl ">
-        <button className="px-4 py-2 rounded-xl border border-[#FBA819] m-0  text-white transition">Login</button>
-    </div>
+              <div className="w-fit rounded-xl ">
+                <button
+                  className="px-4 py-2 rounded-xl border border-[#FBA819] m-0  text-white transition"
+                  onClick={openForm}
+                >
+                  {" "}
+                  {isLoggedIn ? (
+            <div className="flex items-center capitalize gap-2"  onClick={handleUsernameClick}>
+                            <FaUser size={20} />
+              <span
+                className="mr-2 cursor-pointer"
+               
+              >
+                {username}
+              </span>
 
+            </div>
+          ) : (
+            <span>{isLoginForm ? "Login" : "Register"}</span>
+          )}
+        </button>
+        {isFormOpen && !isLoggedIn && (
+          <div
+            ref={formRef}
+            className="absolute right-[180px] top-[80px] w-[500px] mt-4 p-4 bg-slate-900 text-white rounded shadow-lg"
+          >
+            <form onSubmit={handleFormSubmit}>
+              <h2 className="text-center text-2xl mb-4">
+                {isLoginForm ? "Login" : "Register"}
+              </h2>
+              {isLoginForm ? (
+                <>
+                  <div className="my-2">
+                    <label className="block text-white">Email:</label>
+                    <input
+                      type="email"
+                      name="email"
+                      className="w-full text-black p-2 rounded"
+                      required
+                    />
+                    
+                  </div>
+                  <div className="my-2">
+                    <label className="block text-gray-300">Password:</label>
+                    <input
+                      type="password"
+                      name="password"
+                      className="w-full text-black p-2 rounded"
+                      required
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="my-2">
+                    <label className="block text-white">Username:</label>
+                    <input
+                      type="text"
+                      name="username"
+                      className="w-full text-black p-2 rounded"
+                      required
+                    />
+                  </div>
+                  <div className="my-2">
+                    <label className="block text-white">Email:</label>
+                    <input
+                      type="email"
+                      name="email"
+                      className="w-full text-black p-2 rounded"
+                      required
+                    />
+                  </div>
+                  <div className="my-2">
+                    <label className="block text-white">Phone Number:</label>
+                    <input
+                      type="text"
+                      name="phoneNumber"
+                      className="w-full text-black p-2 rounded"
+                      required
+                    />
+                  </div>
+                  <div className="my-2">
+                    <label className="block text-white">Password:</label>
+                    <input
+                      type="password"
+                      name="password"
+                      className="w-full text-black p-2 rounded"
+                      required
+                    />
+                  </div>
+                </>
+              )}
+              <button
+                type="submit"
+                className="w-full bg-[#FBA819] text-white py-2 rounded"
+              >
+                {isLoginForm ? "Login" : "Register"}
+              </button>
+              <button
+                type="button"
+                onClick={toggleForm}
+                className="w-full bg-transparent border border-[#FBA819] text-[#FBA819] py-2 mt-2 rounded"
+              >
+                {isLoginForm ? "Need an account? Register" : "Already have an account? Login"}
+              </button>
+            </form>
+          </div>
+        )}
+        {isLoggedIn && showLogoutButton &&  (
+          <div
+            className="absolute right-[180px] top-[80px] w-[200px] mt-4 p-4 bg-slate-900 text-white rounded shadow-lg"
+          >
+            <button
+              onClick={handleLogout}
+              className="w-full bg-red-600 text-white py-2 rounded flex items-center justify-center"
+            >
+              <FaSignOutAlt className="mr-2" />
+              Logout
+            </button>
+          </div>
+        )}
+              </div>
             </div>
             {/* <div className="lg:hidden  flex items-center">
               <HeaderMenu toggleContactForm={toggleContactForm} />
@@ -239,6 +478,7 @@ function Header() {
           </motion.div>
         )}
       </AnimatePresence>
+      <ToastContainer />
     </>
   );
 }
