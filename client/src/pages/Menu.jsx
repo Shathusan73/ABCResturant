@@ -12,9 +12,10 @@ function Menu() {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); 
 
   useEffect(() => {
-    // Retrieve user session data from localStorage
+   
     const storedUserData = localStorage.getItem("userData");
     if (storedUserData) {
       setUserData(JSON.parse(storedUserData));
@@ -58,8 +59,17 @@ function Menu() {
     setIsAlertModalOpen(false);
   };
 
+  const filterMenus = () => {
+    if (!searchQuery) {
+      return menus;
+    }
+    return menus.filter((menu) =>
+      menu.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
   const renderMenuItemsByCategory = (categoryId) => {
-    const filteredMenus = menus.filter(
+    const filteredMenus = filterMenus().filter(
       (menu) => menu.category && menu.category.id === categoryId
     );
 
@@ -115,6 +125,18 @@ function Menu() {
         <h2 className="text-4xl font-extrabold mb-10 text-center text-[#FBA819]">
           MOUTH WATERING MENU
         </h2>
+
+        {/* Search Bar */}
+        <div className="mb-10 flex justify-center">
+          <input
+            type="text"
+            placeholder="Search menu..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="px-4 py-2 border rounded-lg w-1/2 text-black"
+          />
+        </div>
+
         <div className="grid grid-cols-3 gap-[64px]">
           {categories.length === 0 ? (
             <p className="text-gray-500 text-center">No categories available.</p>
@@ -139,7 +161,7 @@ function Menu() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className=" p-8 rounded-lg shadow-lg w-full  mx-auto container pl-[320px]">
+            <div className="p-8 rounded-lg shadow-lg w-full mx-auto container pl-[320px]">
               <button
                 onClick={closeModal}
                 className="absolute top-4 right-4 text-gray-600"
