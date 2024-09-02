@@ -27,7 +27,7 @@ function Header() {
   const formRef = useRef(null);
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
+    const storedUsername = localStorage.getItem("username");
     if (storedUsername) {
       setIsLoggedIn(true);
       setUsername(storedUsername);
@@ -109,7 +109,6 @@ function Header() {
   };
 
   useEffect(() => {
-   
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
       setVisible(
@@ -127,10 +126,8 @@ function Header() {
     };
   }, [prevScrollPos]);
 
-  
-
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     const email = event.target.email.value.trim();
@@ -148,7 +145,10 @@ function Header() {
         return;
       }
       try {
-        const response = await axios.post('http://localhost:8080/api/customers/login', { email, password });
+        const response = await axios.post(
+          "http://localhost:8080/api/customers/login",
+          { email, password }
+        );
         toast.success("Login successful!");
         setIsLoggedIn(true);
         setUsername(response.data.username);
@@ -158,7 +158,7 @@ function Header() {
           email: response.data.email,
           phoneNumber: response.data.phoneNumber,
         };
-        localStorage.setItem('userData', JSON.stringify(userData));
+        localStorage.setItem("userData", JSON.stringify(userData));
 
         closeForm();
       } catch (error) {
@@ -178,7 +178,12 @@ function Header() {
         return;
       }
       try {
-        await axios.post('http://localhost:8080/api/customers/register', { username, email, phoneNumber, password });
+        await axios.post("http://localhost:8080/api/customers/register", {
+          username,
+          email,
+          phoneNumber,
+          password,
+        });
         toast.success("Registration successful! Please log in.");
         setIsLoginForm(true);
       } catch (error) {
@@ -191,30 +196,26 @@ function Header() {
     }
   };
   const handleLogout = () => {
-    localStorage.removeItem('userData');
+    localStorage.removeItem("userData");
     setIsLoggedIn(false);
-    setUsername('');
+    setUsername("");
     toast.success("You have been logged out successfully!");
   };
 
-  
-
   const handleUsernameClick = () => {
-
     if (isLoggedIn) {
       setShowLogoutButton(!showLogoutButton);
     }
   };
-  
-  useEffect(() => {
 
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (formRef.current && !formRef.current.contains(event.target)) {
         closeForm();
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   return (
     <>
@@ -281,40 +282,22 @@ function Header() {
                 </Link>
               </div>
               <div
-                className={`flex headerLink items-center gap-[6px] px-[12px] py-[8px] ${
-                  activeLink === "courses"
-                    ? "text-[#FBA919]"
-                    : "hover:text-[#8D8D8E]"
-                }`}
-                onClick={() => handleLinkClick("courses")}
-              >
-                {/* {activeLink === "courses" && (
-                  <img
-                    src={HeaderActiveIcon}
-                    alt="HeaderActiveIcon"
-                    className="h-[12px] w-[12px] headericon"
-                  />
-                )} */}
-                <Link to="/courses" onClick={handleClick}>
+               
+               >
+                <Link to="gallery" >
                   GALLERY
                 </Link>
               </div>
               <div
                 className={`flex headerLink items-center gap-[6px] px-[12px] py-[8px] ${
-                  activeLink === "gallery"
+                  activeLink === "reservations"
                     ? "text-[#FBA919]"
                     : "hover:text-[#8D8D8E]"
                 }`}
-                onClick={() => handleLinkClick("gallery")}
+                
               >
-                {activeLink === "gallery" && (
-                  <img
-                    src={HeaderActiveIcon}
-                    alt="HeaderActiveIcon"
-                    className="h-[12px] w-[12px] headericon"
-                  />
-                )}
-                <Link to="/gallery" onClick={handleClick}>
+           
+                <Link to="/reservation" onClick={handleClick}>
                   RESERVATION
                 </Link>
               </div>
@@ -332,120 +315,130 @@ function Header() {
                 >
                   {" "}
                   {isLoggedIn ? (
-            <div className="flex items-center capitalize gap-2"  onClick={handleUsernameClick}>
-                            <FaUser size={20} />
-              <span
-                className="mr-2 cursor-pointer"
-               
-              >
-                {username}
-              </span>
-
-            </div>
-          ) : (
-            <span>{isLoginForm ? "Login" : "Register"}</span>
-          )}
-        </button>
-        {isFormOpen && !isLoggedIn && (
-          <div
-            ref={formRef}
-            className="absolute right-[180px] top-[80px] w-[500px] mt-4 p-4 bg-slate-900 text-white rounded shadow-lg"
-          >
-            <form onSubmit={handleFormSubmit}>
-              <h2 className="text-center text-2xl mb-4">
-                {isLoginForm ? "Login" : "Register"}
-              </h2>
-              {isLoginForm ? (
-                <>
-                  <div className="my-2">
-                    <label className="block text-white">Email:</label>
-                    <input
-                      type="email"
-                      name="email"
-                      className="w-full text-black p-2 rounded"
-                      required
-                    />
-                    
+                    <div
+                      className="flex items-center capitalize gap-2"
+                      onClick={handleUsernameClick}
+                    >
+                      <FaUser size={20} />
+                      <span className="mr-2 cursor-pointer">{username}</span>
+                    </div>
+                  ) : (
+                    <span>{isLoginForm ? "Login" : "Register"}</span>
+                  )}
+                </button>
+                {isFormOpen && !isLoggedIn && (
+                  <div
+                    ref={formRef}
+                    className="absolute right-[180px] top-[80px] w-[500px] mt-4 p-4 bg-slate-900 text-white rounded shadow-lg"
+                  >
+                    <form onSubmit={handleFormSubmit}>
+                      <h2 className="text-center text-2xl mb-4">
+                        {isLoginForm ? "Login" : "Register"}
+                      </h2>
+                      {isLoginForm ? (
+                        <>
+                          <div className="my-2">
+                            <label className="block text-white">Email:</label>
+                            <input
+                              type="email"
+                              name="email"
+                              className="w-full text-black p-2 rounded"
+                              required
+                            />
+                          </div>
+                          <div className="my-2">
+                            <label className="block text-gray-300">
+                              Password:
+                            </label>
+                            <input
+                              type="password"
+                              name="password"
+                              className="w-full text-black p-2 rounded"
+                              required
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="my-2">
+                            <label className="block text-white">
+                              Username:
+                            </label>
+                            <input
+                              type="text"
+                              name="username"
+                              className="w-full text-black p-2 rounded"
+                              required
+                            />
+                          </div>
+                          <div className="my-2">
+                            <label className="block text-white">Email:</label>
+                            <input
+                              type="email"
+                              name="email"
+                              className="w-full text-black p-2 rounded"
+                              required
+                            />
+                          </div>
+                          <div className="my-2">
+                            <label className="block text-white">
+                              Phone Number:
+                            </label>
+                            <input
+                              type="text"
+                              name="phoneNumber"
+                              className="w-full text-black p-2 rounded"
+                              required
+                            />
+                          </div>
+                          <div className="my-2">
+                            <label className="block text-white">
+                              Password:
+                            </label>
+                            <input
+                              type="password"
+                              name="password"
+                              className="w-full text-black p-2 rounded"
+                              required
+                            />
+                          </div>
+                        </>
+                      )}
+                      <button
+                        type="submit"
+                        className="w-full bg-[#FBA819] text-white py-2 rounded"
+                      >
+                        {isLoginForm ? "Login" : "Register"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={toggleForm}
+                        className="w-full bg-transparent border border-[#FBA819] text-[#FBA819] py-2 mt-2 rounded"
+                      >
+                        {isLoginForm
+                          ? "Need an account? Register"
+                          : "Already have an account? Login"}
+                      </button>
+                    </form>
                   </div>
-                  <div className="my-2">
-                    <label className="block text-gray-300">Password:</label>
-                    <input
-                      type="password"
-                      name="password"
-                      className="w-full text-black p-2 rounded"
-                      required
-                    />
+                )}
+                {isLoggedIn && showLogoutButton && (
+                  <div className="absolute flex flex-col   items-center gap-4 right-[180px] top-[80px] w-[200px] mt-4 p-4 bg-slate-900 text-white rounded shadow-lg">
+                    <Link to="myorder">
+                      <div>My Orders</div>
+                    </Link>
+                    <Link to="mybookings">
+                    <div>My bookings</div>
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full bg-red-600 text-white py-2 rounded flex items-center justify-center"
+                    >
+                      <FaSignOutAlt className="mr-2" />
+                      Logout
+                    </button>
                   </div>
-                </>
-              ) : (
-                <>
-                  <div className="my-2">
-                    <label className="block text-white">Username:</label>
-                    <input
-                      type="text"
-                      name="username"
-                      className="w-full text-black p-2 rounded"
-                      required
-                    />
-                  </div>
-                  <div className="my-2">
-                    <label className="block text-white">Email:</label>
-                    <input
-                      type="email"
-                      name="email"
-                      className="w-full text-black p-2 rounded"
-                      required
-                    />
-                  </div>
-                  <div className="my-2">
-                    <label className="block text-white">Phone Number:</label>
-                    <input
-                      type="text"
-                      name="phoneNumber"
-                      className="w-full text-black p-2 rounded"
-                      required
-                    />
-                  </div>
-                  <div className="my-2">
-                    <label className="block text-white">Password:</label>
-                    <input
-                      type="password"
-                      name="password"
-                      className="w-full text-black p-2 rounded"
-                      required
-                    />
-                  </div>
-                </>
-              )}
-              <button
-                type="submit"
-                className="w-full bg-[#FBA819] text-white py-2 rounded"
-              >
-                {isLoginForm ? "Login" : "Register"}
-              </button>
-              <button
-                type="button"
-                onClick={toggleForm}
-                className="w-full bg-transparent border border-[#FBA819] text-[#FBA819] py-2 mt-2 rounded"
-              >
-                {isLoginForm ? "Need an account? Register" : "Already have an account? Login"}
-              </button>
-            </form>
-          </div>
-        )}
-        {isLoggedIn && showLogoutButton &&  (
-          <div
-            className="absolute right-[180px] top-[80px] w-[200px] mt-4 p-4 bg-slate-900 text-white rounded shadow-lg"
-          >
-            <button
-              onClick={handleLogout}
-              className="w-full bg-red-600 text-white py-2 rounded flex items-center justify-center"
-            >
-              <FaSignOutAlt className="mr-2" />
-              Logout
-            </button>
-          </div>
-        )}
+                )}
               </div>
             </div>
             {/* <div className="lg:hidden  flex items-center">
