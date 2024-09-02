@@ -23,6 +23,8 @@ import Offers from "../pages/admin/Offers/Offers";
 import AllBookings from "../pages/admin/TableBooking/AllBookings";
 import CreateBookingForm from "../pages/admin/TableBooking/CreateBookingForm";
 import ContactFormTable from "../components/ContactFormTable";
+import AllOrders from "../pages/admin/Order/AllOrders";
+import CreateOrder from "../pages/admin/Order/CreateOrder";
 
 
 
@@ -71,6 +73,8 @@ const Root = () => {
             <Route path="/all-bookings" element={<AllBookings />} />
             <Route path="/create-table" element={<CreateBookingForm />} />
             <Route path="/form-table" element={<ContactFormTable />} />
+            <Route path="/all-orders" element={<AllOrders />} />
+            <Route path="/create-orders" element={<CreateOrder />} />
           </Route>
         )}
         <Route

@@ -39,7 +39,7 @@ const getLinksByUserRole = (userRole) => {
         icon: <SiIfood className="text-[20px]" />,
       },
       {
-        to: "/technicians",
+        to: "/all-orders",
         text: "Orders",
         icon: <GiFoodTruck className="text-[20px]" />,
       },

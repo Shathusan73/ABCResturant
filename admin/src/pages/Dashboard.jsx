@@ -12,6 +12,12 @@ function Dashboard() {
     completed: 0
   });
   const [offers, setOffers] = useState([]);
+  const [ordersSummary, setOrdersSummary] = useState({
+    pending: 0,
+    confirmed: 0,
+    delivered: 0,
+    canceled: 0
+  });
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -57,12 +63,28 @@ function Dashboard() {
       }
     };
 
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/orders");
+        const ordersData = response.data;
+        const summary = {
+          pending: ordersData.filter(o => o.status === 'Pending').length,
+          confirmed: ordersData.filter(o => o.status === 'Processing').length,
+          delivered: ordersData.filter(o => o.status === 'Cancelled').length,
+          canceled: ordersData.filter(o => o.status === 'Completed').length,
+        };
+        setOrdersSummary(summary);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+
     fetchCategories();
     fetchMenus();
     fetchBookings();
     fetchOffers();
+    fetchOrders();
   }, []);
-
   return (
     <div className="p-8 min-h-screen text-white bg-gray-100">
       <h1 className="text-4xl font-bold mb-8 text-gray-800">Dashboard</h1>
@@ -110,6 +132,30 @@ function Dashboard() {
               <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
                 <h4 className="text-xl font-semibold text-blue-800">Completed</h4>
                 <p className="text-3xl font-bold text-blue-600">{bookings.completed}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+         {/* Orders Summary Section */}
+       <div className="mb-12 w-full">
+          <h3 className="text-2xl font-semibold mb-6 text-gray-700">Orders Summary</h3>
+          <div className="bg-white text-gray-800 rounded-lg shadow-lg p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
+                <h4 className="text-xl font-semibold text-blue-800">Pending</h4>
+                <p className="text-3xl font-bold text-blue-600">{ordersSummary.pending}</p>
+              </div>
+              <div className="bg-green-100 p-4 rounded-lg shadow-md text-center">
+                <h4 className="text-xl font-semibold text-green-800">Confirmed</h4>
+                <p className="text-3xl font-bold text-green-600">{ordersSummary.confirmed}</p>
+              </div>
+              <div className="bg-yellow-100 p-4 rounded-lg shadow-md text-center">
+                <h4 className="text-xl font-semibold text-yellow-800">Delivered</h4>
+                <p className="text-3xl font-bold text-yellow-600">{ordersSummary.delivered}</p>
+              </div>
+              <div className="bg-red-100 p-4 rounded-lg shadow-md text-center">
+                <h4 className="text-xl font-semibold text-red-800">Canceled</h4>
+                <p className="text-3xl font-bold text-red-600">{ordersSummary.canceled}</p>
               </div>
             </div>
           </div>
@@ -187,7 +233,11 @@ function Dashboard() {
         </div>
         </div>
       </div>
-    </div>
+      
+      </div>
+    
+    
+    
   );
 }
 
