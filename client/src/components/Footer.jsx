@@ -65,7 +65,7 @@ function Footer() {
   return (
     <>
       <div>
-        <div className="flex relative flex-col overflow-hidden bg-[#FBA819]">
+        <div className="flex  flex-col overflow-hidden bg-[#FBA819]">
           <div className="lg:py-[80px] py-[48px] md:px-[24px] px-[16px]">
             <div className="container mx-auto">
               <div className="flex flex-col gap-[24px] lg:items-start md:items-center items-start">

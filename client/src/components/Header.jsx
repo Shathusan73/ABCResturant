@@ -27,7 +27,6 @@ function Header() {
   const formRef = useRef(null);
 
   useEffect(() => {
-    // Retrieve login state from localStorage on component mount
     const storedUsername = localStorage.getItem('username');
     if (storedUsername) {
       setIsLoggedIn(true);
@@ -110,7 +109,7 @@ function Header() {
   };
 
   useEffect(() => {
-    // Add scroll event listener
+   
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
       setVisible(
@@ -153,7 +152,14 @@ function Header() {
         toast.success("Login successful!");
         setIsLoggedIn(true);
         setUsername(response.data.username);
-        localStorage.setItem('username', response.data.username);
+        const userData = {
+          id: response.data.id,
+          username: response.data.username,
+          email: response.data.email,
+          phoneNumber: response.data.phoneNumber,
+        };
+        localStorage.setItem('userData', JSON.stringify(userData));
+
         closeForm();
       } catch (error) {
         if (error.response && error.response.status === 401) {
@@ -185,24 +191,23 @@ function Header() {
     }
   };
   const handleLogout = () => {
+    localStorage.removeItem('userData');
     setIsLoggedIn(false);
-    setUsername("");
-    localStorage.removeItem('username');
-    setShowLogoutButton(true);
-
-    // Hide logout button after 3 seconds
-   
+    setUsername('');
+    toast.success("You have been logged out successfully!");
   };
 
+  
+
   const handleUsernameClick = () => {
-    // Show the logout button only when the user clicks on the username
+
     if (isLoggedIn) {
       setShowLogoutButton(!showLogoutButton);
     }
   };
   
   useEffect(() => {
-    // Close the form when clicked outside
+
     const handleClickOutside = (event) => {
       if (formRef.current && !formRef.current.contains(event.target)) {
         closeForm();
