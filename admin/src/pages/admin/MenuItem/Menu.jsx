@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { FaPlusSquare } from 'react-icons/fa';
 import axios from 'axios';
-import CreateMenu from './CreateMenu';
 import MenuTable from '../../../components/MenuTable';
-
+import { toast, Toaster } from 'react-hot-toast';
 
 function Menu() {
   const [menuItems, setMenuItems] = useState([]);
@@ -27,6 +25,9 @@ function Menu() {
     try {
       await axios.delete(`http://localhost:8080/api/menu/${id}`);
       fetchMenuItems();
+      toast.success('Menu item deleted successfully!', {
+        position: 'center',
+      });
     } catch (error) {
       console.error('Failed to delete menu item:', error);
     }
@@ -57,12 +58,11 @@ function Menu() {
 
   return (
     <div className="flex flex-col w-full gap-5 mx-auto">
+       <Toaster />
       <nav className="my-2">
         <ol className="flex text-[#ff2626]">
-          <li className="flex items-center">
-            <a href="/">Home</a>
-          </li>
-          <li className="flex items-center text-[#2a1472]">
+        
+          <li className="text-3xl font-semibold text-gray-900 mb-6">
             <span>Menu </span>
           </li>
         </ol>
@@ -73,7 +73,7 @@ function Menu() {
           type="button"
           className="text-white bg-[#360909] flex items-center gap-2 hover:bg-[#0e2139] font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
         >
-          <FaPlusSquare />
+          
           Add New Menu Item
         </button>
       </a>

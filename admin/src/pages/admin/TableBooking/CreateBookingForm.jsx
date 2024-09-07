@@ -17,7 +17,7 @@ function CreateBookingForm() {
       });
       toast.success('Table booked successfully!');
       reset();
-    } catch (error) {
+    } catch (errors) {
       toast.error('Failed to book the table');
     } finally {
       setIsSubmitting(false);

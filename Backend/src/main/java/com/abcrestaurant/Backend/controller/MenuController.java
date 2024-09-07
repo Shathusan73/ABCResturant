@@ -25,7 +25,6 @@ public class MenuController {
         List<Menu> menus = menuService.getAllMenus();
         return ResponseEntity.ok(menus);
     }
-
     @PostMapping
     public ResponseEntity<Menu> createMenu(
             @RequestParam("name") String name,
@@ -34,10 +33,9 @@ public class MenuController {
             @RequestParam("ingredients") List<String> ingredients,
             @RequestParam("categoryId") Long categoryId,
             @RequestParam("image") MultipartFile image,
-            @RequestParam("offerStatus") Boolean offerStatus, // New field
-            @RequestParam("offerClickPercentage") Double offerClickPercentage, // New field
-            @RequestParam("finalPrice") Double finalPrice) { // New field
-
+            @RequestParam("offerStatus") Boolean offerStatus,
+            @RequestParam("offerClickPercentage") Double offerClickPercentage,
+            @RequestParam("finalPrice") Double finalPrice) {
         try {
             String imagePath = menuService.saveImage(image);
             Menu menu = menuService.createMenu(name, price, description, ingredients, categoryId, imagePath, offerStatus, offerClickPercentage, finalPrice);
@@ -46,7 +44,6 @@ public class MenuController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
     @PutMapping("/{id}")
     public ResponseEntity<Menu> updateMenu(
             @PathVariable Long id,
@@ -59,7 +56,6 @@ public class MenuController {
             @RequestParam(value = "offerStatus", required = false) Boolean offerStatus, // New field
             @RequestParam(value = "offerClickPercentage", required = false) Double offerClickPercentage, // New field
             @RequestParam(value = "finalPrice", required = false) Double finalPrice) { // New field
-
         try {
             String imagePath = null;
             if (image != null) {

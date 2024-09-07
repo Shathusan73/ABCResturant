@@ -58,7 +58,7 @@ function CreateOrder() {
       };
   
       axios.post('http://localhost:8080/api/orders', orderData)
-        .then((response) => {
+        .then(() => {
           toast.success('Order placed successfully!');
           setQuantity(1);
           setPaymentMethod('Cash');

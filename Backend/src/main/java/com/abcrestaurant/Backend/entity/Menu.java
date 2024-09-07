@@ -15,10 +15,9 @@ public class Menu {
     private Double price;
     private String description;
     private String imageUrl;
-    private Boolean offerStatus; // New field
-    private Double offerClickPercentage; // New field
-    private Double finalPrice; // New field
-
+    private Boolean offerStatus;
+    private Double offerClickPercentage;
+    private Double finalPrice;
     @ElementCollection
     private List<String> ingredients;
 

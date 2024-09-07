@@ -43,13 +43,9 @@ function CreateStaff() {
       <div className="flex flex-col w-full gap-5 mx-auto">
         <nav className="my-2">
           <ol className="flex gap-[16px] text-gray-500">
-            <li className="flex items-center">
-              <a href="/" className="hover:text-blue-500">
-                Home
-              </a>
-            </li>
+            
             <li className="flex items-center text-red-950">
-              <span>/Create Staff</span>
+              <span>Create Staff</span>
             </li>
           </ol>
         </nav>
