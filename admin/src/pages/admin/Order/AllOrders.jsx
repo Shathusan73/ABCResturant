@@ -6,10 +6,8 @@ function AllOrders() {
     <div className="flex flex-col w-full gap-5 mx-auto">
     <nav className="my-2 flex gap-4">
       <ol className="flex  gap-4 text-[#ff2626]">
-        <li className="flex items-center">
-          <a href="/">Home</a>
-        </li>
-        <li className="flex items-center text-[#2a1472]">
+        
+        <li className="text-3xl font-semibold text-gray-900 mb-6">
           <span>Orders </span>
         </li>
       </ol>
@@ -20,7 +18,7 @@ function AllOrders() {
         type="button"
         className="text-white bg-[#360909] flex items-center gap-2 hover:bg-[#0e2139] font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
       >
-        <FaPlusSquare />
+      
         Add New Orders
       </button>
     </a>

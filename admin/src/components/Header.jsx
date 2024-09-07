@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { profile } from "../constants/Data";
+import { IoPersonCircleSharp } from "react-icons/io5";
 
 const Header = ({ onToggleSidebar, userRole }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -45,8 +46,8 @@ const Header = ({ onToggleSidebar, userRole }) => {
                 href="/"
                 className="flex items-center justify-center ms-2 md:me-24"
               >
-                <p className="font-bold text-[25px] text-[#0e2139]">
-                  ABC RESTURANT
+                <p className="font-bold pl-[45px] text-[25px] text-center text-[#0e2139]">
+                  RESTURANT
                 </p>
               </a>
             </div>
@@ -61,7 +62,7 @@ const Header = ({ onToggleSidebar, userRole }) => {
                     <span className="text-red-500"><img src={profile} alt="" className="h-[50px] w-[50px] object-cover rounded-full" /></span>
                   )}
                   {userRole === "staff" && (
-                    <span className="text-red-500">Staff</span>
+                    <span className=" text-[50px]"><IoPersonCircleSharp /></span>
                   )}
                 </div>
               </button>

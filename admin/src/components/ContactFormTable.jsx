@@ -24,6 +24,13 @@ const ContactFormTable = () => {
     fetchContactForms();
   }, []);
 
+  const handleEmailReply = (email) => {
+  
+    window.location.href = `mailto:${email}?subject=Re: Your Inquiry&body=Dear Customer,`;
+  };
+
+
+
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-semibold text-gray-900 mb-6">
@@ -39,6 +46,7 @@ const ContactFormTable = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone Number</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -51,11 +59,21 @@ const ContactFormTable = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{form.phoneNumber}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{form.subject}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{form.message}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                    <button
+                      onClick={() => handleEmailReply(form.email)}
+                      className="text-blue-500 hover:underline"
+                    >
+                      Reply via Email
+                    </button>
+                    <br />
+                  
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="px-6 py-4 text-center text-gray-500">No data available</td>
+                <td colSpan="7" className="px-6 py-4 text-center text-gray-500">No data available</td>
               </tr>
             )}
           </tbody>

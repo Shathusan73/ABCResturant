@@ -135,12 +135,11 @@ function Dashboard() {
               </div>
             </div>
           </div>
-        </div>
-         {/* Orders Summary Section */}
+            {/* Orders Summary Section */}
        <div className="mb-12 w-full">
           <h3 className="text-2xl font-semibold mb-6 text-gray-700">Orders Summary</h3>
-          <div className="bg-white text-gray-800 rounded-lg shadow-lg p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white text-gray-800 rounded-lg  ">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
               <div className="bg-blue-100 p-4 rounded-lg shadow-md text-center">
                 <h4 className="text-xl font-semibold text-blue-800">Pending</h4>
                 <p className="text-3xl font-bold text-blue-600">{ordersSummary.pending}</p>
@@ -160,6 +159,8 @@ function Dashboard() {
             </div>
           </div>
         </div>
+        </div>
+       
 <div className="flex gap-[32px]">
         {/* Menus Section */}
         <div className="mb-12 w-full">

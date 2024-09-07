@@ -63,25 +63,21 @@ const getLinksByUserRole = (userRole) => {
     ];
   } else if (userRole === "staff") {
     return [
+  
       {
-        to: "/dashboard",
-        text: "Dashboard",
-        icon: <BiSolidDashboard className="text-[20px]" />,
+        to: "/all-orders",
+        text: "Orders",
+        icon: <GiFoodTruck className="text-[20px]" />,
       },
       {
-        to: "/category",
-        text: "Category",
-        icon: <MdCategory  className="text-[20px]" />,
+        to: "/all-bookings",
+        text: "Tables Booking",
+        icon: <MdOutlineTableRestaurant className="text-[20px]" />,
       },
       {
-        to: "/payments",
-        text: "Pay online",
-        icon: <MdOutlinePayment className="text-[20px]" />,
-      },
-      {
-        to: "/appointment-details",
-        text: "Appointment",
-        icon: <BiTask className="text-[20px]" />,
+        to: "/form-table",
+        text: "Message",
+        icon: <TbMessageChatbotFilled className="text-[20px]" />,
       },
     ];
   }
@@ -100,8 +96,10 @@ const Sidebar = ({ isOpen, userRole }) => {
     <>
       <aside id="logo-sidebar" className={sidebarClasses} aria-label="Sidebar">
         <div className="h-full px-3 pb-4 overflow-y-auto bg-[#181818] ">
-            
-          <p className="py-[30px] text-white divide-y divide-gray-100">Main</p>
+            <div className="font-bold">
+          <p className="pt-[30px] text-amber-400 divide-y text-center text-[32px] divide-gray-100">ABC</p>
+          <p className="pb-[30px] text-white divide-y text-center text-[32px] divide-gray-100">RESTURANT</p>
+          </div>
           <ul className="space-y-2 flex flex-col gap-[30px] font-normal ">
             {links.map(({ to, text, icon }) => (
               <li key={to}>

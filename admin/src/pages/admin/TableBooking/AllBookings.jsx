@@ -1,6 +1,4 @@
 import React from 'react'
-import { FaPlusSquare } from 'react-icons/fa'
-import { RxSlash } from 'react-icons/rx'
 import BookingTable from '../../../components/Bookingtable'
 
 function AllBookings() {
@@ -8,12 +6,9 @@ function AllBookings() {
     <div className="flex flex-col w-full gap-5 mx-auto">
     <nav className="my-2">
       <ol className="flex text-[#ff2626]">
-        <li className="flex items-center">
-          <a href="/">Home</a>
-          <RxSlash />
-        </li>
-        <li className="flex items-center text-[#2a1472]">
-          <span>Booking Table </span>
+       
+        <li className="text-3xl font-semibold text-gray-900 mb-6">
+          <span>Reservation Table </span>
         </li>
       </ol>
     </nav>
@@ -23,7 +18,7 @@ function AllBookings() {
         type="button"
         className="text-white bg-[#360909] flex items-center gap-2 hover:bg-[#0e2139] font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
       >
-        <FaPlusSquare />
+     
         Create Table Booking
       </button>
     </a>

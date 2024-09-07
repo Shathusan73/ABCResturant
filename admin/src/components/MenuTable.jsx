@@ -19,6 +19,8 @@ const MenuTable = () => {
   });
   const [newIngredient, setNewIngredient] = useState("");
   const [image, setImage] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [menuToDelete, setMenuToDelete] = useState(null);
 
   useEffect(() => {
     fetchMenus();
@@ -140,17 +142,29 @@ const MenuTable = () => {
     }));
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this menu item?")) {
+  const handleDelete = (id) => {
+    setMenuToDelete(id);
+    setShowConfirmModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (menuToDelete) {
       try {
-        await axios.delete(`http://localhost:8080/api/menus/${id}`);
+        await axios.delete(`http://localhost:8080/api/menus/${menuToDelete}`);
         toast.success("Menu item deleted successfully!");
         fetchMenus();
+        setShowConfirmModal(false);
+        setMenuToDelete(null);
       } catch (error) {
         toast.error("Failed to delete menu item");
         console.error("Delete error:", error);
       }
     }
+  };
+
+  const cancelDelete = () => {
+    setShowConfirmModal(false);
+    setMenuToDelete(null);
   };
 
   return (
@@ -255,102 +269,62 @@ const MenuTable = () => {
                 </div>
                 <div className="mb-4">
                   <label
-                    htmlFor="offerClickPercentage"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Offer Click Percentage
-                  </label>
-                  <input
-                    type="number"
-                    id="offerClickPercentage"
-                    name="offerClickPercentage"
-                    value={editForm.offerClickPercentage}
-                    onChange={handleEditChange}
-                    placeholder="Offer Click Percentage"
-                    className="p-2 border border-gray-300 rounded w-full"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="finalPrice"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Final Price
-                  </label>
-                  <input
-                    type="number"
-                    id="finalPrice"
-                    name="finalPrice"
-                    value={editForm.finalPrice}
-                    readOnly
-                    className="p-2 border border-gray-300 rounded w-full bg-gray-100"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
                     htmlFor="description"
                     className="block text-sm font-medium text-gray-700"
                   >
                     Description
                   </label>
-                  <input
-                    type="text"
+                  <textarea
                     id="description"
                     name="description"
                     value={editForm.description}
                     onChange={handleEditChange}
                     placeholder="Description"
+                    rows="3"
                     className="p-2 border border-gray-300 rounded w-full"
                   />
                 </div>
-                <div className="mb-4 flex items-center">
-                  <input
-                    type="checkbox"
-                    id="offerStatus"
-                    checked={editForm.offerStatus}
-                    onChange={handleCheckboxChange}
-                    className="mr-2"
-                  />
+                <div className="mb-4">
                   <label
-                    htmlFor="offerStatus"
-                    className="text-sm font-medium text-gray-700"
+                    htmlFor="ingredients"
+                    className="block text-sm font-medium text-gray-700"
                   >
-                    Active
+                    Ingredients
                   </label>
-                </div>
-                <div className="flex mb-4">
-                  <input
-                    type="text"
-                    value={newIngredient}
-                    onChange={(e) => setNewIngredient(e.target.value)}
-                    placeholder="Add ingredient"
-                    className="p-2 border border-gray-300 rounded flex-grow"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddIngredient}
-                    className="ml-2 bg-blue-500 text-white px-4 py-2 rounded"
-                  >
-                    Add
-                  </button>
-                </div>
-                <ul className="mb-4">
-                  {editForm.ingredients.map((ingredient, index) => (
-                    <li
-                      key={index}
-                      className="flex justify-between items-center"
+                  <div className="flex space-x-2">
+                    <input
+                      type="text"
+                      value={newIngredient}
+                      onChange={(e) => setNewIngredient(e.target.value)}
+                      placeholder="Add ingredient"
+                      className="p-2 border border-gray-300 rounded w-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddIngredient}
+                      className="bg-blue-500 text-white px-4 py-2 rounded"
                     >
-                      {ingredient}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveIngredient(index)}
-                        className="text-red-500 ml-2"
+                      Add
+                    </button>
+                  </div>
+                  <ul className="mt-2">
+                    {editForm.ingredients.map((ingredient, index) => (
+                      <li
+                        key={index}
+                        className="flex justify-between items-center py-1"
                       >
-                        Remove
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                        {ingredient}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveIngredient(index)}
+                          className="text-red-500"
+                        >
+                          &times;
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
                 <div className="mb-4">
                   <label
                     htmlFor="categoryId"
@@ -365,7 +339,7 @@ const MenuTable = () => {
                     onChange={handleEditChange}
                     className="p-2 border border-gray-300 rounded w-full"
                   >
-                    <option value="">Select Category</option>
+                    <option value="">Select a category</option>
                     {categories.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.categoryName}
@@ -373,6 +347,36 @@ const MenuTable = () => {
                     ))}
                   </select>
                 </div>
+                <div className="mb-4">
+                  <label className="inline-flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={editForm.offerStatus}
+                      onChange={handleCheckboxChange}
+                      className="form-checkbox"
+                    />
+                    <span className="ml-2">Offer Status</span>
+                  </label>
+                </div>
+                {editForm.offerStatus && (
+                  <div className="mb-4">
+                    <label
+                      htmlFor="offerClickPercentage"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Offer Click Percentage
+                    </label>
+                    <input
+                      type="number"
+                      id="offerClickPercentage"
+                      name="offerClickPercentage"
+                      value={editForm.offerClickPercentage}
+                      onChange={handleEditChange}
+                      placeholder="Offer Click Percentage"
+                      className="p-2 border border-gray-300 rounded w-full"
+                    />
+                  </div>
+                )}
                 <div className="mb-4">
                   <label
                     htmlFor="image"
@@ -383,16 +387,15 @@ const MenuTable = () => {
                   <input
                     type="file"
                     id="image"
-                    accept="image/*"
                     onChange={handleImageChange}
                     className="p-2 border border-gray-300 rounded w-full"
                   />
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-end space-x-4">
                   <button
                     type="button"
                     onClick={() => setEditingMenu(null)}
-                    className="bg-gray-300 px-4 py-2 rounded"
+                    className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
                   >
                     Cancel
                   </button>
@@ -405,6 +408,35 @@ const MenuTable = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Confirm Delete Modal */}
+        {showConfirmModal && (
+          <div className="modal fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg w-1/3">
+              <h2 className="text-xl font-bold mb-4">Confirm Deletion</h2>
+              <p className="mb-4">
+                Are you sure you want to delete this menu item? This action
+                cannot be undone.
+              </p>
+              <div className="flex justify-end space-x-4">
+                <button
+                  type="button"
+                  onClick={cancelDelete}
+                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmDelete}
+                  className="bg-red-500 text-white px-4 py-2 rounded"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         )}
