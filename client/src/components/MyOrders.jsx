@@ -6,18 +6,27 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
+  const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
+    // Fetch user data from localStorage
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    if (userData) {
+      setUserEmail(userData.email);
+    }
+
     // Fetch customer orders from the API
     axios.get('http://localhost:8080/api/payments')
       .then((response) => {
-        setOrders(response.data);
+        // Filter orders based on userEmail
+        const filteredOrders = response.data.filter(order => order.email === userEmail);
+        setOrders(filteredOrders);
       })
       .catch((error) => {
         toast.error('Error fetching orders');
         console.error('Error fetching orders:', error);
       });
-  }, []);
+  }, [userEmail]);
 
   const handleDelete = (orderId) => {
     // Delete the order by ID

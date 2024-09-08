@@ -26,7 +26,7 @@ function OrderTable() {
       })
       .catch((error) => {
         toast.error('Error fetching orders');
-        console.error('Error fetching orders:', error);
+        console.error('Error fetching orders:', error.response ? error.response.data : error.message);
       });
   }, []);
 
@@ -39,7 +39,7 @@ function OrderTable() {
       })
       .catch((error) => {
         toast.error('Error deleting order');
-        console.error('Error deleting order:', error);
+        console.error('Error deleting order:', error.response ? error.response.data : error.message);
       });
   };
 
@@ -55,14 +55,12 @@ function OrderTable() {
     });
   };
 
-
-  
   const handleFormSubmit = (e) => {
     e.preventDefault();
     axios.put(`http://localhost:8080/api/payments/${formData.id}`, formData)
-      .then(() => {
+      .then((response) => {
         const updatedOrders = orders.map((order) =>
-          order.id === formData.id ? formData : order
+          order.id === formData.id ? response.data : order
         );
         setOrders(updatedOrders);
         setEditingOrder(null);
@@ -70,7 +68,7 @@ function OrderTable() {
       })
       .catch((error) => {
         toast.error('Error updating order');
-        console.error('Error updating order:', error);
+        console.error('Error updating order:', error.response ? error.response.data : error.message);
       });
   };
 
@@ -90,7 +88,7 @@ function OrderTable() {
   };
 
   return (
-    <div className=" mx-auto p-8 mt-2">
+    <div className="mx-auto p-8 mt-2">
       <h2 className="text-2xl font-bold mb-6">My Orders</h2>
       <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
         <thead className="bg-gray-100 border-b border-gray-200">
@@ -102,7 +100,6 @@ function OrderTable() {
             <th className="py-2 px-4 border-b">Menu Item</th>
             <th className="py-2 px-4 border-b">Quantity</th>
             <th className="py-2 px-4 border-b">Total Price</th>
-            {/* <th className="py-2 px-4 border-b">Payment Method</th> */}
             <th className="py-2 px-4 border-b">Status</th>
             <th className="py-2 px-4 border-b">Actions</th>
           </tr>
@@ -119,7 +116,6 @@ function OrderTable() {
               <td className="py-4 text-center border-b">
                 ${Number(order.totalPrice || 0).toFixed(2)}
               </td>
-              {/* <td className="py-4 text-center border-b">{order.paymentMethod}</td> */}
               <td className="py-4 text-center border-b">
                 <span className={`py-2 px-4 rounded-full ${getStatusColor(order.status)}`}>
                   {order.status}
@@ -145,89 +141,88 @@ function OrderTable() {
       </table>
 
       {editingOrder && (
-        
-        <div className='container mx-auto relative '>
-        <div className="mt-8 p-4  absolute  bottom-10  bg-white left-[450px]  border border-gray-200 rounded-lg">
-          <h3 className="text-xl font-semibold  mb-4">Edit Order</h3>
-          <form onSubmit={handleFormSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                name="menuName"
-                value={formData.itemName}
-                onChange={handleFormChange}
-                placeholder="Menu Item"
-                className="p-2 border  rounded-lg"
-                required
-              />
-              <input
-                type="number"
-                name="quantity"
-                value={formData.itemQuantity}
-                onChange={handleFormChange}
-                placeholder="Quantity"
-                className="p-2 border rounded-lg"
-                required
-              />
-              <input
-                type="text"
-                name="totalPrice"
-                value={formData.totalPrice}
-                onChange={handleFormChange}
-                placeholder="Total Price"
-                className="p-2 border rounded-lg"
-                required
-              />
-          
-              <input
-                type="text"
-                name="userName"
-                value={formData.username}
-                onChange={handleFormChange}
-                placeholder="User Name"
-                className="p-2 border rounded-lg"
-                required
-              />
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleFormChange}
-                placeholder="Email"
-                className="p-2 border rounded-lg"
-                required
-              />
-              <input
-                type="text"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleFormChange}
-                placeholder="Phone Number"
-                className="p-2 border rounded-lg"
-                required
-              />
-              <select
-                name="status"
-                value={formData.status}
-                onChange={handleFormChange}
-                className="p-2 border rounded-lg"
-                required
+        <div className="container mx-auto relative">
+          <div className="mt-8 p-4 absolute bottom-10 bg-white left-[450px] border border-gray-200 rounded-lg">
+            <h3 className="text-xl font-semibold mb-4">Edit Order</h3>
+            <form onSubmit={handleFormSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  name="itemName"
+                  value={formData.itemName}
+                  onChange={handleFormChange}
+                  placeholder="Menu Item"
+                  className="p-2 border rounded-lg"
+                  required
+                />
+                <input
+                  type="number"
+                  name="itemQuantity"
+                  value={formData.itemQuantity}
+                  onChange={handleFormChange}
+                  placeholder="Quantity"
+                  className="p-2 border rounded-lg"
+                  required
+                />
+                <input
+                  type="text"
+                  name="totalPrice"
+                  value={formData.totalPrice}
+                  onChange={handleFormChange}
+                  placeholder="Total Price"
+                  className="p-2 border rounded-lg"
+                  required
+                />
+                <input
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleFormChange}
+                  placeholder="User Name"
+                  className="p-2 border rounded-lg"
+                  required
+                />
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleFormChange}
+                  placeholder="Email"
+                  className="p-2 border rounded-lg"
+                  required
+                />
+                <input
+                  type="text"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleFormChange}
+                  placeholder="Phone Number"
+                  className="p-2 border rounded-lg"
+                  required
+                />
+                <select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleFormChange}
+                  className="p-2 border rounded-lg"
+                  required
+                >
+                  <option value="">Select Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Processing">Processing</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="Completed">Completed</option>
+                  <option value="canceled">Cancelled</option>
+                </select>
+              </div>
+              <button
+                type="submit"
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
               >
-                <option value="">Select Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Ontheway">Ontheway</option>
-                <option value="Completed">Completed</option>
-                <option value="Cancelled">Cancelled</option>
-              </select>
-            </div>
-            <button
-              type="submit"
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
-            >
-              Save Changes
-            </button>
-          </form>
-        </div>
+                Save Changes
+              </button>
+            </form>
+          </div>
         </div>
       )}
       <ToastContainer />
