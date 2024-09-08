@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import OrderForm from "../components/OrderForm";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import PaymentCard from "../components/PaymentCard";
 
 function Menu() {
   const [menus, setMenus] = useState([]);
@@ -12,7 +12,16 @@ function Menu() {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); 
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false); 
+
+  const [isPaymentCardVisible, setIsPaymentCardVisible] = useState(true);
+
+  const handleClose = () => {
+    setIsPaymentCardVisible(false);
+  };
 
   useEffect(() => {
    
@@ -21,6 +30,8 @@ function Menu() {
       setUserData(JSON.parse(storedUserData));
     }
 
+    
+    
     const fetchData = async () => {
       try {
         const [menusResponse, categoriesResponse] = await Promise.all([
@@ -41,13 +52,55 @@ function Menu() {
     fetchData();
   }, []);
 
-  const handleOrderClick = (menu) => {
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      setSelectedItems(JSON.parse(savedCart));
+    }
+  }, []);
+
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(selectedItems));
+  }, [selectedItems]);
+
+  const handleAddToCart = (menu) => {
+    const existingItem = selectedItems.find((item) => item.id === menu.id);
+
+    if (existingItem) {
+      const updatedItems = selectedItems.map((item) =>
+        item.id === menu.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+      setSelectedItems(updatedItems);
+    } else {
+      setSelectedItems([...selectedItems, { ...menu, quantity: 1 }]);
+    }
     if (!userData) {
       setIsAlertModalOpen(true);
+      
     } else {
-      setSelectedMenu(menu);
-      setIsModalOpen(true);
+      setIsCartOpen(true); 
     }
+    
+  };
+
+  const handleRemoveFromCart = (menu) => {
+    const updatedItems = selectedItems
+      .map((item) =>
+        item.id === menu.id ? { ...item, quantity: item.quantity - 1 } : item
+      )
+      .filter((item) => item.quantity > 0);
+    setSelectedItems(updatedItems);
+  };
+
+  const calculateTotalPrice = () => {
+    return selectedItems.reduce(
+      (total, item) =>
+        total + item.quantity * (item.offerStatus ? item.finalPrice : item.price),
+      0
+    );
   };
 
   const closeModal = () => {
@@ -73,6 +126,8 @@ function Menu() {
       (menu) => menu.category && menu.category.id === categoryId
     );
 
+  
+  
     return filteredMenus.length > 0 ? (
       filteredMenus.map((menu) => (
         <div
@@ -98,12 +153,12 @@ function Menu() {
               )}
             </div>
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-start">
             <button
-              onClick={() => handleOrderClick(menu)}
+              onClick={() => handleAddToCart(menu)}
               className="select-none rounded-lg bg-amber-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-black shadow-md shadow-amber-500/20 transition-all hover:shadow-lg hover:shadow-amber-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             >
-              Order Now
+              Add To Card
             </button>
           </div>
         </div>
@@ -113,6 +168,11 @@ function Menu() {
     );
   };
 
+  const handlePaymentClick = () => {
+    setIsPaymentModalOpen(true);
+  };
+
+ 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
@@ -153,26 +213,7 @@ function Menu() {
         </div>
       </div>
 
-      <AnimatePresence>
-        {isModalOpen && (
-          <motion.div
-            className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="p-8 rounded-lg shadow-lg w-full mx-auto container pl-[320px]">
-              <button
-                onClick={closeModal}
-                className="absolute top-4 right-4 text-gray-600"
-              >
-                ×
-              </button>
-              <OrderForm menu={selectedMenu} onClose={closeModal} />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    
 
       <AnimatePresence>
         {isAlertModalOpen && (
@@ -196,6 +237,103 @@ function Menu() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <AnimatePresence>
+      {isCartOpen && (
+        <motion.div
+          className="fixed top-0 right-0 h-full bg-gradient-to-br from-purple-900 to-gray-900 text-white w-[480px] shadow-2xl p-6 z-50 rounded-l-3xl backdrop-blur-lg border-l border-white/20"
+          initial={{ x: "100%" }}
+          animate={{ x: 0 }}
+          exit={{ x: "100%" }}
+        >
+          {/* Close Button */}
+          <button
+            onClick={() => setIsCartOpen(false)}
+            className="absolute top-6 right-6 text-gray-300 hover:text-white text-3xl"
+          >
+            &times;
+          </button>
+
+          {/* Cart Title */}
+          <h2 className="text-4xl font-extrabold mb-8 text-center tracking-wide bg-gradient-to-r from-pink-500 to-purple-500 text-transparent bg-clip-text">
+            Your Cart
+          </h2>
+
+          {/* Cart Items */}
+          {selectedItems.length > 0 ? (
+            <div className="space-y-8">
+              <ul className="space-y-6">
+                {selectedItems.map((item) => (
+                  <li key={item.id} className="p-6 rounded-xl bg-white/10 shadow-lg backdrop-blur-md flex flex-col items-center space-y-4">
+                    <div className="flex justify-between items-center w-full text-lg font-semibold">
+                      <span>{item.name} (x{item.quantity})</span>
+                      <span className="text-xl text-pink-300">
+                        ${(
+                          item.quantity *
+                          (item.offerStatus ? item.finalPrice : item.price)
+                        ).toFixed(2)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between w-full space-x-4">
+                      <button
+                        onClick={() => handleAddToCart(item)}
+                        className="bg-green-400/90 py-2 px-4 rounded-full text-white shadow-md hover:bg-green-500 hover:shadow-lg transition-all"
+                      >
+                        +
+                      </button>
+                      <button
+                        onClick={() => handleRemoveFromCart(item)}
+                        className="bg-red-400/90 py-2 px-4 rounded-full text-white shadow-md hover:bg-red-500 hover:shadow-lg transition-all"
+                      >
+                        -
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Total Amount */}
+              <div className="mt-10 text-3xl font-extrabold text-center text-white">
+                Total: <span className="text-pink-300">${calculateTotalPrice().toFixed(2)}</span>
+              </div>
+
+              {/* Pay Now Button */}
+              <div className="flex justify-center mt-8">
+                <button
+                  onClick={handlePaymentClick}
+                  className="bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 py-4 px-12 rounded-full font-bold text-xl text-white shadow-xl hover:scale-105 hover:shadow-2xl transition-transform"
+                >
+                  Pay Now
+                </button>
+              </div>
+            </div>
+          ) : (
+            <p className="text-center text-gray-300 text-lg mt-16">Your cart is empty.</p>
+          )}
+        </motion.div>
+      )}
+ {/* Payment Modal */}
+ {isPaymentModalOpen && (
+  <motion.div
+    className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+  >
+     {isPaymentCardVisible && (
+    <PaymentCard 
+  userData={userData} 
+  selectedItems={selectedItems} 
+  totalPrice={calculateTotalPrice()} 
+  onClose={handleClose}
+
+/>
+     )}
+  </motion.div>
+)}
+
+      
+    </AnimatePresence>
     </div>
   );
 }

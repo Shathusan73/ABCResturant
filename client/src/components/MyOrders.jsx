@@ -9,7 +9,7 @@ const MyOrders = () => {
 
   useEffect(() => {
     // Fetch customer orders from the API
-    axios.get('http://localhost:8080/api/orders')
+    axios.get('http://localhost:8080/api/payments')
       .then((response) => {
         setOrders(response.data);
       })
@@ -21,7 +21,7 @@ const MyOrders = () => {
 
   const handleDelete = (orderId) => {
     // Delete the order by ID
-    axios.delete(`http://localhost:8080/api/orders/${orderId}`)
+    axios.delete(`http://localhost:8080/api/payments/${orderId}`)
       .then(() => {
         setOrders(orders.filter(order => order.id !== orderId));
         toast.success('Order deleted successfully!');
@@ -65,8 +65,8 @@ const MyOrders = () => {
           {orders.map((order) => (
             <tr key={order.id}>
               <td className="py-2 text-center border-b">{order.id}</td>
-              <td className="py-2 text-center border-b">{order.menuName}</td>
-              <td className="py-2 text-center border-b">{order.quantity}</td>
+              <td className="py-2 text-center border-b">{order.itemName}</td>
+              <td className="py-2 text-center border-b">{order.itemQuantity}</td>
               <td className="py-2 text-center border-b">
                 ${Number(order.totalPrice || 0).toFixed(2)}
               </td>
