@@ -20,7 +20,7 @@ function OrderTable() {
   });
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/orders')
+    axios.get('http://localhost:8080/api/payments')
       .then((response) => {
         setOrders(response.data);
       })
@@ -31,7 +31,7 @@ function OrderTable() {
   }, []);
 
   const handleDelete = (orderId) => {
-    axios.delete(`http://localhost:8080/api/orders/${orderId}`)
+    axios.delete(`http://localhost:8080/api/payments/${orderId}`)
       .then(() => {
         const updatedOrders = orders.filter((order) => order.id !== orderId);
         setOrders(updatedOrders);
@@ -59,7 +59,7 @@ function OrderTable() {
   
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    axios.put(`http://localhost:8080/api/orders/${formData.id}`, formData)
+    axios.put(`http://localhost:8080/api/payments/${formData.id}`, formData)
       .then(() => {
         const updatedOrders = orders.map((order) =>
           order.id === formData.id ? formData : order
@@ -102,7 +102,7 @@ function OrderTable() {
             <th className="py-2 px-4 border-b">Menu Item</th>
             <th className="py-2 px-4 border-b">Quantity</th>
             <th className="py-2 px-4 border-b">Total Price</th>
-            <th className="py-2 px-4 border-b">Payment Method</th>
+            {/* <th className="py-2 px-4 border-b">Payment Method</th> */}
             <th className="py-2 px-4 border-b">Status</th>
             <th className="py-2 px-4 border-b">Actions</th>
           </tr>
@@ -111,15 +111,15 @@ function OrderTable() {
           {orders.map((order) => (
             <tr key={order.id} className="hover:bg-gray-100">
               <td className="py-4 text-center border-b">{order.id}</td>
-              <td className="py-4 text-center border-b">{order.userName}</td>
+              <td className="py-4 text-center border-b">{order.username}</td>
               <td className="py-4 text-center border-b">{order.email}</td>
               <td className="py-4 text-center border-b">{order.phoneNumber}</td>
-              <td className="py-4 text-center border-b">{order.menuName}</td>
-              <td className="py-4 text-center border-b">{order.quantity}</td>
+              <td className="py-4 text-center border-b">{order.itemName}</td>
+              <td className="py-4 text-center border-b">{order.itemQuantity}</td>
               <td className="py-4 text-center border-b">
                 ${Number(order.totalPrice || 0).toFixed(2)}
               </td>
-              <td className="py-4 text-center border-b">{order.paymentMethod}</td>
+              {/* <td className="py-4 text-center border-b">{order.paymentMethod}</td> */}
               <td className="py-4 text-center border-b">
                 <span className={`py-2 px-4 rounded-full ${getStatusColor(order.status)}`}>
                   {order.status}
@@ -154,7 +154,7 @@ function OrderTable() {
               <input
                 type="text"
                 name="menuName"
-                value={formData.menuName}
+                value={formData.itemName}
                 onChange={handleFormChange}
                 placeholder="Menu Item"
                 className="p-2 border  rounded-lg"
@@ -163,7 +163,7 @@ function OrderTable() {
               <input
                 type="number"
                 name="quantity"
-                value={formData.quantity}
+                value={formData.itemQuantity}
                 onChange={handleFormChange}
                 placeholder="Quantity"
                 className="p-2 border rounded-lg"
@@ -178,19 +178,11 @@ function OrderTable() {
                 className="p-2 border rounded-lg"
                 required
               />
-              <input
-                type="text"
-                name="paymentMethod"
-                value={formData.paymentMethod}
-                onChange={handleFormChange}
-                placeholder="Payment Method"
-                className="p-2 border rounded-lg"
-                required
-              />
+          
               <input
                 type="text"
                 name="userName"
-                value={formData.userName}
+                value={formData.username}
                 onChange={handleFormChange}
                 placeholder="User Name"
                 className="p-2 border rounded-lg"

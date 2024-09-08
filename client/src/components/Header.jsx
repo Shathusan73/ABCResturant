@@ -27,10 +27,11 @@ function Header() {
   const formRef = useRef(null);
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    if (storedUsername) {
+    const storedUserData = localStorage.getItem("userData");
+    if (storedUserData) {
+      const userData = JSON.parse(storedUserData);
       setIsLoggedIn(true);
-      setUsername(storedUsername);
+      setUsername(userData.username);
     }
   }, []);
 
@@ -201,7 +202,6 @@ function Header() {
     setUsername("");
     toast.success("You have been logged out successfully!");
   };
-
   const handleUsernameClick = () => {
     if (isLoggedIn) {
       setShowLogoutButton(!showLogoutButton);
