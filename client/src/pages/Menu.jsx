@@ -241,7 +241,7 @@ function Menu() {
       <AnimatePresence>
       {isCartOpen && (
         <motion.div
-          className="fixed top-0 right-0 h-full bg-gradient-to-br from-purple-900 to-gray-900 text-white w-[480px] shadow-2xl p-6 z-50 rounded-l-3xl backdrop-blur-lg border-l border-white/20"
+          className="fixed scrollbar-hidden top-0 right-0 overflow-scroll h-full bg-gradient-to-br from-purple-900 to-gray-900 text-white w-[480px] shadow-2xl p-6 z-50 rounded-l-3xl backdrop-blur-lg border-l border-white/20"
           initial={{ x: "100%" }}
           animate={{ x: 0 }}
           exit={{ x: "100%" }}

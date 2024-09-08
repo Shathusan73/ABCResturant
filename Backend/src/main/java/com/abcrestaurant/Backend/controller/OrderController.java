@@ -4,16 +4,20 @@ import com.abcrestaurant.Backend.entity.Order;
 import com.abcrestaurant.Backend.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+
 @RequestMapping("/api/orders")
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class OrderController {
 
+    @Autowired
+    private JavaMailSender javaMailSender;
     private final OrderService orderService;
 
     @Autowired

@@ -106,7 +106,7 @@ function PaymentCard({ userData, selectedItems, totalPrice, onClose }) {
               name="accountNumber"
               value={paymentDetails.accountNumber}
               onChange={handlePaymentChange}
-              placeholder="Enter 10-digit account number"
+              placeholder="Enter  account number"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
             />
           </div>
