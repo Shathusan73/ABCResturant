@@ -20,7 +20,9 @@ Additional Tools:
 ✉️ Email Integration: For sending notifications and confirmations to customers.
 💳 Payment Integration: For secure online transactions.
 
+ 
 <h1>🚀 **How to Run the Project**</h1>
+Git Clone -git clone https://github.com/Shathusan73/ABCResturant.git -(cmd)
 ⚙️ Admin Panel Setup
 Steps:
 
