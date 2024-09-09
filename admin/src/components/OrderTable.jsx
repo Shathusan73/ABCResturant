@@ -76,20 +76,20 @@ function OrderTable() {
     switch (status) {
       case 'Pending':
         return 'bg-yellow-200 text-yellow-800';
-      case 'Processing':
+      case 'Deliverd':
         return 'bg-blue-200 text-blue-800';
-      case 'Completed':
+      case 'confirmed':
         return 'bg-green-200 text-green-800';
-      case 'Cancelled':
-        return 'bg-red-200 text-red-800';
+      case 'Ontheway':
+        return 'bg-gray-200 text-red-800';
       default:
-        return 'bg-gray-200 text-gray-800';
+        return '  bg-red-200 text-gray-800';
     }
   };
 
   return (
     <div className="mx-auto p-8 mt-2">
-      <h2 className="text-2xl font-bold mb-6">My Orders</h2>
+      <h2 className="text-2xl font-bold mb-6">Orders</h2>
       <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
         <thead className="bg-gray-100 border-b border-gray-200">
           <tr>
@@ -209,9 +209,9 @@ function OrderTable() {
                 >
                   <option value="">Select Status</option>
                   <option value="Pending">Pending</option>
-                  <option value="Processing">Processing</option>
+                  <option value="Ontheway">Ontheway</option>
                   <option value="confirmed">Confirmed</option>
-                  <option value="Completed">Completed</option>
+                  <option value="Deliverd">Deliverd</option>
                   <option value="canceled">Cancelled</option>
                 </select>
               </div>

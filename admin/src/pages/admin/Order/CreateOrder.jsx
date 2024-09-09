@@ -5,8 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function CreateOrder() {
     const [menuItems, setMenuItems] = useState([]);
-    const [menuName, setMenuName] = useState('');
-    const [quantity, setQuantity] = useState(1);
+    const [itemName, setMenuName] = useState('');
+    const [itemQuantity, setQuantity] = useState(1);
     const [totalPrice, setTotalPrice] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState('Cash');
     const [amount, setAmount] = useState(0);
@@ -14,7 +14,7 @@ function CreateOrder() {
     const [loading, setLoading] = useState(false);
   
     // User details state
-    const [userName, setUserName] = useState('');
+    const [username, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
   
@@ -36,28 +36,28 @@ function CreateOrder() {
   
     useEffect(() => {
       // Update total price when menu item or quantity changes
-      const selectedItem = menuItems.find((item) => item.name === menuName);
+      const selectedItem = menuItems.find((item) => item.name === itemName);
       if (selectedItem) {
-        setTotalPrice(selectedItem.price * quantity);
+        setTotalPrice(selectedItem.price * itemQuantity);
       }
-    }, [menuName, quantity, menuItems]);
+    }, [itemName, itemQuantity, menuItems]);
   
     const handleSubmit = (event) => {
       event.preventDefault();
       setLoading(true);
   
       const orderData = {
-        userName,
+        username,
         email,
         phoneNumber,
-        menuName,
-        quantity,
+        itemName,
+        itemQuantity,
         totalPrice: paymentMethod === 'Cash' ? totalPrice : amount,
         paymentMethod,
         status: 'Pending'
       };
   
-      axios.post('http://localhost:8080/api/orders', orderData)
+      axios.post('http://localhost:8080/api/payments', orderData)
         .then(() => {
           toast.success('Order placed successfully!');
           setQuantity(1);
@@ -83,7 +83,7 @@ function CreateOrder() {
             <input
               type="text"
               id="userName"
-              value={userName}
+              value={username}
               onChange={(e) => setUserName(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white focus:outline-none sm:text-sm"
             />
@@ -112,7 +112,7 @@ function CreateOrder() {
             <label htmlFor="menuName" className="block text-sm font-medium text-gray-700">Menu Item</label>
             <select
               id="menuName"
-              value={menuName}
+              value={itemName}
               onChange={(e) => setMenuName(e.target.value)}
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
@@ -128,7 +128,7 @@ function CreateOrder() {
             <input
               type="number"
               id="quantity"
-              value={quantity}
+              value={itemQuantity}
               onChange={(e) => setQuantity(e.target.value)}
               min="1"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
