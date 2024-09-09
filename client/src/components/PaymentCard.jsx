@@ -52,7 +52,7 @@ function PaymentCard({ userData, selectedItems, totalPrice, onClose }) {
           setTimeout(() => {
             setShowSuccessModal(false);
             onClose(); 
-          }, 8000); // Auto-close the payment card after 8 seconds
+          }, 8000); 
         } else {
           setPaymentError("Payment failed. Please try again.");
         }
@@ -63,10 +63,10 @@ function PaymentCard({ userData, selectedItems, totalPrice, onClose }) {
   };
 
   const handleCancelPayment = () => {
-    setPaymentCancelled(true); // Set cancellation status to true
+    setPaymentCancelled(true); 
     setTimeout(() => {
-      onClose(); // Close the payment card after 2 seconds
-    }, 2000);
+      onClose(); 
+    }, 8000);
   };
 
   return (
@@ -150,7 +150,7 @@ function PaymentCard({ userData, selectedItems, totalPrice, onClose }) {
             </p>
           )}
           {paymentCancelled && (
-            <p className="text-yellow-500 text-sm text-center mb-4">
+            <p className="text-red-500 font-semibold  text-[24px] text-center mb-4">
               Payment canceled.
             </p>
           )}
