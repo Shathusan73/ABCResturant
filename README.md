@@ -22,7 +22,7 @@ Additional Tools:
 
  
 <h1>🚀 **How to Run the Project**</h1>
-Git Clone -git clone https://github.com/Shathusan73/ABCResturant.git -(cmd)
+Git Clone -git clone https://github.com/Shathusan73/ABCResturant.git -( cmd )<br>
 ⚙️ Admin Panel Setup
 Steps:
 
